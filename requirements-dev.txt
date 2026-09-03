@@ -1,0 +1,10 @@
+# Development-only dependencies. Not needed to run the simulation.
+#
+# The Axelrod library is used solely to cross-check our own match engine
+# against a reference implementation (D-012). It is kept out of
+# requirements.txt because it pulls in torch, scipy, dask and networkx - a
+# heavy tree for three packages' worth of actual runtime need. The tests that
+# use it skip cleanly when it is absent.
+-r requirements.txt
+
+axelrod==4.14.0

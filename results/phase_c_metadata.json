@@ -1,0 +1,61 @@
+{
+  "generated": "2026-09-02T16:58:43.677985+00:00",
+  "root_seed": 20260902,
+  "roster": [
+    "Always Cooperate",
+    "Always Defect",
+    "Tit-for-Tat",
+    "Tit-for-Two-Tats",
+    "Two-Tits-for-Tat",
+    "Grim Trigger",
+    "Generous TFT",
+    "Contrite TFT",
+    "Pavlov",
+    "Suspicious TFT",
+    "Prober",
+    "Gradual",
+    "Soft Majority",
+    "Random",
+    "Alternator"
+  ],
+  "roster_size": 15,
+  "payoffs": {
+    "temptation": 5.0,
+    "reward": 3.0,
+    "punishment": 1.0,
+    "sucker": 0.0
+  },
+  "error_rate_grid": [
+    0.0,
+    0.02,
+    0.04,
+    0.06,
+    0.08,
+    0.1,
+    0.12,
+    0.14,
+    0.16,
+    0.18,
+    0.2
+  ],
+  "continuation_grid": [
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    0.98,
+    0.99
+  ],
+  "replicates": 5,
+  "phase_c_generations": 60000,
+  "extinction_during_run": false,
+  "reporting_extinction_threshold": 1e-06,
+  "selection_intensity": 0.5,
+  "fixed_rounds_at_w_1": 200,
+  "python": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.1",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "rows": 440
+}

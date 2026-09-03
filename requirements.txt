@@ -1,0 +1,6 @@
+# Pinned exactly: reproducibility is a project requirement, and the RNG
+# stream of numpy.random.Generator is only guaranteed stable within a
+# version series. Verified against Python 3.14.
+numpy==2.5.1
+matplotlib==3.11.1
+pytest==9.1.1

@@ -1,0 +1,58 @@
+Phase C - the (epsilon, w) sweep
+11 error rates x 8 continuation probabilities x 5 replicates = 440 runs
+Root seed 20260902, G = 60000, no culling during the run.
+
+
+==============================================================================
+Prediction (a), D-020: does the basin shrink like (1 - w)?
+==============================================================================
+Minimum Tit-for-Tat share, as a fraction of the whole population,
+needed to defeat a population that is 90% Always Defect.
+Noiseless (epsilon = 0), so this isolates the w axis.
+
+     w     1-w  E[length]   TFT needed   needed/(1-w)    spread
+---------------------------------------------------------------
+   0.5    0.50        2.0   never wins              -         -
+   0.6    0.40        2.5   never wins              -         -
+   0.7    0.30        3.3   never wins              -         -
+   0.8    0.20        5.0   never wins              -         -
+   0.9    0.10       10.0     6.2864%         0.6286  1.32e-03
+  0.95    0.05       20.0     2.9160%         0.5832  9.01e-04
+  0.98    0.02       50.0     1.1066%         0.5533  4.88e-04
+  0.99    0.01      100.0     0.5675%         0.5675  3.86e-04
+
+Log-log slope of (TFT needed) against (1 - w): 1.046. The prediction is 1.000.
+The ratio needed/(1-w) varies by a factor of 1.14 across the range.
+
+VERDICT: HOLDS.
+The basin shrinks in direct proportion to (1 - w), as derived.
+This was predicted from the payoff structure alone, before any
+of this sweep existed, and the sweep reproduces it.
+
+==============================================================================
+Prediction (b), D-022: does the retaliator share needed rise with eps?
+==============================================================================
+The same probe, at w = 0.99 (expected match length 100),
+against a population that is 90% Always Defect.
+
+  epsilon    TFT needed    vs eps=0     spread
+----------------------------------------------
+     0.00      0.5675%       1.00x   3.86e-04
+     0.02      5.2531%       9.26x   2.66e-02
+     0.04      5.9322%      10.45x   1.38e-02
+     0.06      9.5303%      16.79x   6.13e-03
+     0.08     10.0000%      17.62x   0.00e+00
+     0.10    never wins           -          -
+     0.12    never wins           -          -
+     0.14    never wins           -          -
+     0.16    never wins           -          -
+     0.18    never wins           -          -
+     0.20    never wins           -          -
+
+From epsilon = 0.00 to 0.08 the share needed goes 0.5675% -> 10.0000% (17.6x).
+Monotonically non-decreasing across the grid: True.
+
+VERDICT: HOLDS.
+Errors make retaliators punish each other by mistake, so the
+mutual-recognition assumption behind the 0.25% figure weakens
+and more retaliator is needed. D-022 anticipated this exactly.

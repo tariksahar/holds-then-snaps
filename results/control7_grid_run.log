@@ -1,0 +1,108 @@
+Phase C - the (epsilon, w) sweep
+11 error rates x 8 continuation probabilities x 5 replicates = 440 runs
+Root seed 20260902, G = 60000, no culling during the run.
+
+  w=0.5   eps=0.0   [   5/440] len=  2.00 coop=0.000 survivors=1
+  w=0.5   eps=0.02  [  10/440] len=  2.00 coop=0.020 survivors=1
+  w=0.5   eps=0.04  [  15/440] len=  2.00 coop=0.038 survivors=1
+  w=0.5   eps=0.06  [  20/440] len=  2.00 coop=0.055 survivors=1
+  w=0.5   eps=0.08  [  25/440] len=  2.00 coop=0.078 survivors=1
+  w=0.5   eps=0.1   [  30/440] len=  2.00 coop=0.103 survivors=1
+  w=0.5   eps=0.12  [  35/440] len=  2.00 coop=0.122 survivors=1
+  w=0.5   eps=0.14  [  40/440] len=  2.00 coop=0.143 survivors=1
+  w=0.5   eps=0.16  [  45/440] len=  2.00 coop=0.161 survivors=1
+  w=0.5   eps=0.18  [  50/440] len=  2.00 coop=0.178 survivors=1
+  w=0.5   eps=0.2   [  55/440] len=  2.00 coop=0.197 survivors=1
+  w=0.6   eps=0.0   [  60/440] len=  2.49 coop=0.000 survivors=1
+  w=0.6   eps=0.02  [  65/440] len=  2.49 coop=0.021 survivors=1
+  w=0.6   eps=0.04  [  70/440] len=  2.49 coop=0.038 survivors=1
+  w=0.6   eps=0.06  [  75/440] len=  2.49 coop=0.054 survivors=1
+  w=0.6   eps=0.08  [  80/440] len=  2.49 coop=0.077 survivors=1
+  w=0.6   eps=0.1   [  85/440] len=  2.49 coop=0.103 survivors=1
+  w=0.6   eps=0.12  [  90/440] len=  2.49 coop=0.121 survivors=1
+  w=0.6   eps=0.14  [  95/440] len=  2.49 coop=0.140 survivors=1
+  w=0.6   eps=0.16  [ 100/440] len=  2.49 coop=0.159 survivors=1
+  w=0.6   eps=0.18  [ 105/440] len=  2.49 coop=0.174 survivors=1
+  w=0.6   eps=0.2   [ 110/440] len=  2.49 coop=0.194 survivors=1
+  w=0.7   eps=0.0   [ 115/440] len=  3.33 coop=1.000 survivors=5
+  w=0.7   eps=0.02  [ 120/440] len=  3.33 coop=0.021 survivors=1
+  w=0.7   eps=0.04  [ 125/440] len=  3.33 coop=0.040 survivors=1
+  w=0.7   eps=0.06  [ 130/440] len=  3.33 coop=0.057 survivors=1
+  w=0.7   eps=0.08  [ 135/440] len=  3.33 coop=0.079 survivors=1
+  w=0.7   eps=0.1   [ 140/440] len=  3.33 coop=0.101 survivors=1
+  w=0.7   eps=0.12  [ 145/440] len=  3.33 coop=0.120 survivors=1
+  w=0.7   eps=0.14  [ 150/440] len=  3.33 coop=0.138 survivors=1
+  w=0.7   eps=0.16  [ 155/440] len=  3.33 coop=0.157 survivors=1
+  w=0.7   eps=0.18  [ 160/440] len=  3.33 coop=0.173 survivors=1
+  w=0.7   eps=0.2   [ 165/440] len=  3.33 coop=0.191 survivors=1
+  w=0.8   eps=0.0   [ 170/440] len=  5.02 coop=1.000 survivors=5
+  w=0.8   eps=0.02  [ 175/440] len=  5.02 coop=0.928 survivors=3
+  w=0.8   eps=0.04  [ 180/440] len=  5.02 coop=0.861 survivors=3
+  w=0.8   eps=0.06  [ 185/440] len=  5.02 coop=0.817 survivors=3
+  w=0.8   eps=0.08  [ 190/440] len=  5.02 coop=0.076 survivors=1
+  w=0.8   eps=0.1   [ 195/440] len=  5.02 coop=0.098 survivors=1
+  w=0.8   eps=0.12  [ 200/440] len=  5.02 coop=0.116 survivors=1
+  w=0.8   eps=0.14  [ 205/440] len=  5.02 coop=0.134 survivors=1
+  w=0.8   eps=0.16  [ 210/440] len=  5.02 coop=0.153 survivors=1
+  w=0.8   eps=0.18  [ 215/440] len=  5.02 coop=0.170 survivors=1
+  w=0.8   eps=0.2   [ 220/440] len=  5.02 coop=0.190 survivors=1
+  w=0.9   eps=0.0   [ 225/440] len= 10.02 coop=1.000 survivors=5
+  w=0.9   eps=0.02  [ 230/440] len= 10.02 coop=0.920 survivors=3
+  w=0.9   eps=0.04  [ 235/440] len= 10.02 coop=0.879 survivors=3
+  w=0.9   eps=0.06  [ 240/440] len= 10.02 coop=0.829 survivors=3
+  w=0.9   eps=0.08  [ 245/440] len= 10.02 coop=0.803 survivors=3
+  w=0.9   eps=0.1   [ 250/440] len= 10.02 coop=0.768 survivors=3
+  w=0.9   eps=0.12  [ 255/440] len= 10.02 coop=0.681 survivors=3
+  w=0.9   eps=0.14  [ 260/440] len= 10.02 coop=0.373 survivors=1
+  w=0.9   eps=0.16  [ 265/440] len= 10.02 coop=0.367 survivors=1
+  w=0.9   eps=0.18  [ 270/440] len= 10.02 coop=0.364 survivors=1
+  w=0.9   eps=0.2   [ 275/440] len= 10.02 coop=0.198 survivors=1
+  w=0.95  eps=0.0   [ 280/440] len= 19.96 coop=1.000 survivors=5
+  w=0.95  eps=0.02  [ 285/440] len= 19.96 coop=0.975 survivors=2
+  w=0.95  eps=0.04  [ 290/440] len= 19.96 coop=0.810 survivors=3
+  w=0.95  eps=0.06  [ 295/440] len= 19.96 coop=0.760 survivors=3
+  w=0.95  eps=0.08  [ 300/440] len= 19.96 coop=0.733 survivors=3
+  w=0.95  eps=0.1   [ 305/440] len= 19.96 coop=0.693 survivors=3
+  w=0.95  eps=0.12  [ 310/440] len= 19.96 coop=0.705 survivors=3
+  w=0.95  eps=0.14  [ 315/440] len= 19.96 coop=0.263 survivors=1
+  w=0.95  eps=0.16  [ 320/440] len= 19.96 coop=0.265 survivors=1
+  w=0.95  eps=0.18  [ 325/440] len= 19.96 coop=0.273 survivors=1
+  w=0.95  eps=0.2   [ 330/440] len= 19.96 coop=0.198 survivors=1
+  w=0.98  eps=0.0   [ 335/440] len= 49.58 coop=1.000 survivors=5
+  w=0.98  eps=0.02  [ 340/440] len= 49.58 coop=0.976 survivors=2
+  w=0.98  eps=0.04  [ 345/440] len= 49.58 coop=0.732 survivors=3
+  w=0.98  eps=0.06  [ 350/440] len= 49.58 coop=0.758 survivors=3
+  w=0.98  eps=0.08  [ 355/440] len= 49.58 coop=0.690 survivors=3
+  w=0.98  eps=0.1   [ 360/440] len= 49.58 coop=0.795 survivors=4
+  w=0.98  eps=0.12  [ 365/440] len= 49.58 coop=0.771 survivors=4
+  w=0.98  eps=0.14  [ 370/440] len= 49.58 coop=0.612 survivors=3
+  w=0.98  eps=0.16  [ 375/440] len= 49.58 coop=0.205 survivors=1
+  w=0.98  eps=0.18  [ 380/440] len= 49.58 coop=0.217 survivors=1
+  w=0.98  eps=0.2   [ 385/440] len= 49.58 coop=0.234 survivors=1
+  w=0.99  eps=0.0   [ 390/440] len=101.26 coop=1.000 survivors=5
+  w=0.99  eps=0.02  [ 395/440] len=101.26 coop=0.733 survivors=3
+  w=0.99  eps=0.04  [ 400/440] len=101.26 coop=0.949 survivors=2
+  w=0.99  eps=0.06  [ 405/440] len=101.26 coop=0.658 survivors=3
+  w=0.99  eps=0.08  [ 410/440] len=101.26 coop=0.536 survivors=3
+  w=0.99  eps=0.1   [ 415/440] len=101.26 coop=0.787 survivors=4
+  w=0.99  eps=0.12  [ 420/440] len=101.26 coop=0.760 survivors=4
+  w=0.99  eps=0.14  [ 425/440] len=101.26 coop=0.170 survivors=1
+  w=0.99  eps=0.16  [ 430/440] len=101.26 coop=0.184 survivors=1
+  w=0.99  eps=0.18  [ 435/440] len=101.26 coop=0.200 survivors=1
+  w=0.99  eps=0.2   [ 440/440] len=101.26 coop=0.218 survivors=1
+Traceback (most recent call last):
+  File "C:\Users\MSI\Desktop\evolutionary-game-sim\experiments.py", line 647, in <module>
+    main(
+    ~~~~^
+        run_grid_part=args.only != "predictions",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        run_predictions=args.only != "grid",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\MSI\Desktop\evolutionary-game-sim\experiments.py", line 613, in main
+    paths = save_grid(points, matrices, names)
+  File "C:\Users\MSI\Desktop\evolutionary-game-sim\experiments.py", line 292, in save_grid
+    "sweep_generations": SWEEP_GENERATIONS,
+                         ^^^^^^^^^^^^^^^^^
+NameError: name 'SWEEP_GENERATIONS' is not defined. Did you mean: 'PHASE_C_GENERATIONS'?

@@ -1,0 +1,85 @@
+Influence order (most to least):
+   1. Always Defect        0.1026
+   2. Contrite TFT         0.0868
+   3. Suspicious TFT       0.0483
+   4. Soft Majority        0.0426
+   5. Alternator           0.0359
+   6. Tit-for-Tat          0.0319
+   7. Two-Tits-for-Tat     0.0252
+   8. Grim Trigger         0.0231
+   9. Pavlov               0.0219
+  10. Random               0.0208
+  11. Prober               0.0206
+  12. Gradual              0.0186
+  13. Always Cooperate     0.0177
+  14. Tit-for-Two-Tats     0.0175
+  15. Generous TFT         0.0160
+
+==============================================================================
+Trimmed roster: keep 8
+==============================================================================
+
+Keeping the 8 most influential:
+    Always Defect
+    Contrite TFT
+    Suspicious TFT
+    Soft Majority
+    Alternator
+    Tit-for-Tat
+    Two-Tits-for-Tat
+    Grim Trigger
+Dropping 7: Pavlov, Random, Prober, Gradual, Always Cooperate, Tit-for-Two-Tats, Generous TFT
+
+The trimmed map differs from the pool's by 0.0499 on average, 0.459 at most, with 5 of 88 cells changing their verdict.
+epsilon ceiling: pool 0.20, trimmed 0.20
+
+pool:                        0.00->0.6  0.02->0.6  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.8  0.12->0.8  0.14->0.8  0.16->0.9  0.18->0.9  0.20->0.9
+trimmed to 8:                0.00->0.6  0.02->0.6  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.7  0.12->0.7  0.14->0.7  0.16->0.8  0.18->0.8  0.20->0.9
+
+==============================================================================
+Trimmed roster: keep 10
+==============================================================================
+
+Keeping the 10 most influential:
+    Always Defect
+    Contrite TFT
+    Suspicious TFT
+    Soft Majority
+    Alternator
+    Tit-for-Tat
+    Two-Tits-for-Tat
+    Grim Trigger
+    Pavlov
+    Random
+Dropping 5: Prober, Gradual, Always Cooperate, Tit-for-Two-Tats, Generous TFT
+
+The trimmed map differs from the pool's by 0.0270 on average, 0.459 at most, with 3 of 88 cells changing their verdict.
+epsilon ceiling: pool 0.20, trimmed 0.20
+
+pool:                        0.00->0.6  0.02->0.6  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.8  0.12->0.8  0.14->0.8  0.16->0.9  0.18->0.9  0.20->0.9
+trimmed to 10:               0.00->0.6  0.02->0.7  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.7  0.12->0.8  0.14->0.8  0.16->0.8  0.18->0.9  0.20->0.9
+
+==============================================================================
+Trimmed roster: keep 12
+==============================================================================
+
+Keeping the 12 most influential:
+    Always Defect
+    Contrite TFT
+    Suspicious TFT
+    Soft Majority
+    Alternator
+    Tit-for-Tat
+    Two-Tits-for-Tat
+    Grim Trigger
+    Pavlov
+    Random
+    Prober
+    Gradual
+Dropping 3: Always Cooperate, Tit-for-Two-Tats, Generous TFT
+
+The trimmed map differs from the pool's by 0.0179 on average, 0.380 at most, with 2 of 88 cells changing their verdict.
+epsilon ceiling: pool 0.20, trimmed 0.20
+
+pool:                        0.00->0.6  0.02->0.6  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.8  0.12->0.8  0.14->0.8  0.16->0.9  0.18->0.9  0.20->0.9
+trimmed to 12:               0.00->0.6  0.02->0.6  0.04->0.7  0.06->0.7  0.08->0.7  0.10->0.7  0.12->0.8  0.14->0.8  0.16->0.8  0.18->0.9  0.20->0.9

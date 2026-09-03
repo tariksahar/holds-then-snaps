@@ -1,0 +1,47 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Type checkers / linters
+.mypy_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Figures are regenerated from the data below; do not commit them.
+figures/
+
+# results/ IS committed. It holds the Phase C sweep: the raw grid, the payoff
+# matrices behind it, and the metadata saying what produced them. It is the
+# experimental record, not a build artifact - the report cites it, and a reader
+# should be able to check the analysis without re-running a 20-minute sweep.
+# Everything in it is deterministic from the root seed, so it can also be
+# regenerated; being reproducible is not a reason to leave it out.
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
