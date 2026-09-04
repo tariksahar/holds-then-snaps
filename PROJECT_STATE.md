@@ -249,27 +249,66 @@ from equal shares. D-030 to D-032.
 | 0.32 | 0.32 | 0.32 | 0.32 | 0.32 | 0.32 | 0.33 | 0.33 | 0.38 |
 | 0.35 | 0.35 | 0.35 | 0.35 | 0.35 | 0.35 | 0.36 | 0.36 | 0.35 |
 
-**The pool breaks at ε = 0.30** — D-034, on the axis extended to 0.35. Along
-w = 0.99 the cooperation rate runs 0.70 (ε=0.20) → 0.63 (0.28) → **0.55
-(0.30)** → 0.38 (0.32) → 0.34 (0.34, which equals ε: total defection). The same
-ceiling comes out of the raw rate and of the rate normalised onto `[ε, 1−ε]`,
-so it is the population and not the cutoff.
+**Cooperation holds, and then it snaps.** That shape is the result. Along
+w = 0.99, reading the cooperation rate normalised onto the band the error rate
+allows, `(rate − ε)/(1 − 2ε)`, where 1 is total cooperation and 0 is total
+defection:
 
-**The collapse is a cliff.** Normalised, cooperation sits above 0.78 from ε = 0
-all the way to 0.28, then falls 0.63 → 0.16 → 0.01 in two grid steps. It holds,
-and then it goes.
+| ε | 0.10 | 0.20 | **0.28** | **0.30** | **0.32** | 0.34 |
+|---|---|---|---|---|---|---|
+| raw rate | 0.829 | 0.701 | 0.627 | 0.551 | 0.378 | 0.343 |
+| normalised | 0.911 | 0.836 | **0.788** | **0.628** | **0.162** | 0.008 |
+
+At an error rate of 28% — more than one move in four going astray — the
+population is still cooperating at 79% of what the noise permits. Two grid
+steps later almost nothing is left. Cooperation does not erode under noise; it
+absorbs it, and then it goes all at once.
+
+**Report the edge, not the single number.** "The ceiling is 0.30" is a
+convention — the last ε at which the cooperation rate clears an arbitrary
+cutoff — and it hides the finding. The three figures around the edge (0.788,
+0.628, 0.162) are the measurement; the single number is a summary of them that
+throws away the only interesting part. Raw and normalised readings put the edge
+in the same place, so the edge itself is a property of the population and not
+of where the cutoff was drawn.
 
 The seven re-derived from the same matrices collapse above ε = 0.14. Expanding
 the roster moves the map by 0.153 on average and 0.863 at most.
 
-**Where the ceiling came from.** Across 120 random sub-rosters the *median* ε
-ceiling is 0.20 at every size from 5 to 13. What varies is the minimum, and at
-size 7 the minimum is 0.14 — which is what our seven scored. The ceiling was
-close to the worst available for a roster of that size, because the seven were
-chosen for a world without mistakes. Sensitivity falls with size: mean |Δ map|
-against the pool is 0.203 at size 5, 0.141 at 7, 0.045 at 13.
+**Where the ceiling came from.** Across 120 random sub-rosters, sensitivity to
+composition falls steeply with size — mean |Δ map| against the pool is 0.177 at
+size 5, 0.125 at 7, 0.037 at 13 — and this column is the uncensored one, so it
+is what the section should lead with. On ceilings: at size 7 the median roster
+breaks at 0.26 and the worst at 0.14, which is what our seven scored, the
+minimum of 24 draws. They were at the floor, not merely below typical, because
+they were chosen for a world without mistakes. The `max` column is still at the
+grid edge for sizes 5–11 and is written `≥ 0.35`.
 
-**Contrite TFT answers the D-028 question, with a qualification** — D-032:
+### What survives noise: three mechanisms, and they are not equal
+
+**Dilution wins.** The largest single contributor to how much noise the
+population can take is **Soft Majority** — removing it costs 0.10 of the
+ceiling, more than any other strategy. It is the only pool member with
+unbounded memory: it answers an opponent by what they have done across the
+whole history, so one mistaken move barely moves the verdict at all.
+
+The three error-surviving mechanisms in the pool, weakest last:
+
+| mechanism | strategy | what it does with a mistake | ceiling cost if removed |
+|---|---|---|---|
+| **dilution** | Soft Majority | judges the whole record, so one slip barely registers | **0.10** |
+| **contrition** | Contrite TFT | recognises its own error and accepts the punishment | 0.08 |
+| **forgiveness** | Generous TFT | ignores a fixed random fraction, without asking whose fault | 0.003 |
+
+In plain language, and this is the form worth keeping: **judging someone by
+their record rather than by their last move is the most robust defence against
+noise in this model.** Contrition is next — it repairs a mistake, but only
+after the mistake has already cost a round. Blind forgiveness is worth almost
+nothing, because it discards information instead of using it.
+
+**Contrite TFT is load-bearing — the correction to D-032.** Adding it alone to
+the original seven lifts the ceiling 0.14 → 0.18 with nothing about the noise
+changed, and removing it from the pool costs 0.30 → 0.22:
 
 | roster | ε ceiling |
 |---|---|
@@ -278,22 +317,18 @@ against the pool is 0.203 at size 5, 0.141 at 7, 0.045 at 13.
 | pool 15 − Contrite TFT | **0.22** |
 | pool 15 | **0.30** |
 
-Adding one error-aware strategy to the original seven lifts the ceiling from
-0.14 to 0.18 with nothing about the noise changed — the ceiling was about
-error-handling, as D-028 argued. **Removing Contrite from the pool costs 0.08
-of ceiling (0.30 → 0.22): it is load-bearing, not redundant.** The earlier
-"sufficient but not necessary" reading came from comparing two censored
-numbers and is corrected in D-034.
+D-032 read it as "sufficient but not necessary" because the pool with and
+without it both showed 0.20 — two numbers pinned at the edge of the old grid,
+neither of them a measurement. That is the correction; Soft Majority beating it
+is the finding.
 
-It is still not Contrite's alone — the pool without it reaches 0.22, well above
-the seven's 0.14 — and the largest single contributor is **Soft Majority**,
-whose removal costs 0.10. Soft Majority is the only pool member with unbounded
-memory: it judges the whole record, so an isolated mistake is diluted rather
-than answered. A different way of refusing the echo, and at high ε worth
-slightly more than contrition.
+**Always Defect gets its own line.** It moves the *map* more than any other
+strategy (Δ 0.098) and moves the *ceiling* not at all. The antagonist shapes
+the landscape without setting its limit — how much noise cooperation can
+survive is decided by the cooperators' machinery, not by the defector's
+presence.
 
-Note that Always Defect moves the *map* most (Δ 0.098) and the *ceiling* not at
-all. Ranking by map shift is not ranking by importance to the ceiling.
+Ranking by map shift is not ranking by importance to the ceiling.
 
 **Recommended roster: the 10 most influential** — Always Defect, Contrite TFT,
 Soft Majority, Suspicious TFT, Alternator, Tit-for-Tat, Grim Trigger,
