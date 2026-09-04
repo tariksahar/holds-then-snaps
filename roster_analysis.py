@@ -262,11 +262,74 @@ def epsilon_ceiling(cell_map: dict[tuple[float, float], float],
     The single number the whole (epsilon, w) map reduces to when the question
     is "how much noise can cooperation take". Returns -1 if no cell anywhere is
     cooperative.
+
+    **Check `ceiling_is_censored` before reporting this.** If the highest
+    cooperative cell sits in the last column of the grid, this number is the
+    edge of the ruler and not a property of the roster - which is exactly the
+    error D-033 caught, where "ceiling = 0.20" was recorded for rosters that
+    were still cooperating at 0.67 when the measurement stopped.
     """
     cooperative = [
         epsilon for (epsilon, _), rate in cell_map.items() if rate > cutoff
     ]
     return max(cooperative) if cooperative else -1.0
+
+
+def ceiling_is_censored(
+    cell_map: dict[tuple[float, float], float], cutoff: float = COOPERATION_CUTOFF
+) -> bool:
+    """True when the ceiling is the last column looked at rather than a break.
+
+    Right-censoring: the roster had not collapsed by the end of the grid, so all
+    that was observed is a lower bound.
+    """
+    ceiling = epsilon_ceiling(cell_map, cutoff)
+    return ceiling >= max(epsilon for epsilon, _ in cell_map)
+
+
+def format_ceiling(
+    cell_map: dict[tuple[float, float], float], cutoff: float = COOPERATION_CUTOFF
+) -> str:
+    """The ceiling, rendered so a censored one cannot be mistaken for a value."""
+    ceiling = epsilon_ceiling(cell_map, cutoff)
+    if ceiling < 0:
+        return "none"
+    return f"> {ceiling:.2f}" if ceiling_is_censored(cell_map, cutoff) else f"{ceiling:.2f}"
+
+
+
+def normalised_cooperation(rate: float, error_rate: float) -> float:
+    """Cooperation rate rescaled to the range the error rate actually allows.
+
+    A population that intends to cooperate every round still only plays C a
+    fraction 1 - eps of the time, and one that intends to defect every round
+    still plays C a fraction eps of the time. So the observable rate is confined
+    to [eps, 1 - eps], a band that narrows as eps grows, and a fixed cutoff on
+    the raw rate is a moving target against it.
+
+    This maps that band onto [0, 1]: 0 is total defection, 1 is total
+    cooperation, whatever the error rate. Used to check that the ceiling is a
+    property of the population rather than of where the cutoff happens to sit.
+    """
+    span = 1.0 - 2.0 * error_rate
+    if span <= 0.0:
+        return float("nan")
+    return (rate - error_rate) / span
+
+
+def ceiling_is_robust_to_cutoff(
+    cell_map: dict[tuple[float, float], float]
+) -> tuple[float, float]:
+    """The ceiling read two ways: raw rate, and rate normalised by the eps band.
+
+    If these disagree, the reported ceiling is an artifact of the cutoff rather
+    than a finding, and the disagreement is the thing to report.
+    """
+    raw = epsilon_ceiling(cell_map)
+    normalised = {
+        key: normalised_cooperation(rate, key[0]) for key, rate in cell_map.items()
+    }
+    return raw, epsilon_ceiling(normalised)
 
 
 def lowest_w_by_epsilon(
@@ -430,8 +493,8 @@ def main() -> None:
     print(format_staircase(control, "control of 7:"))
     print()
     print(
-        f"epsilon ceiling: pool {epsilon_ceiling(baseline):.2f}, "
-        f"control {epsilon_ceiling(control):.2f}"
+        f"epsilon ceiling: pool {format_ceiling(baseline)}, "
+        f"control {format_ceiling(control)}"
     )
 
     _banner("Influence: what did each strategy change?")
@@ -471,13 +534,12 @@ def main() -> None:
     print("-" * 78)
     for label, indices in comparisons.items():
         cell_map, _ = roster_map(sweep, indices)
-        ceiling = epsilon_ceiling(cell_map)
         best = max(cell_map.values())
         stair = lowest_w_by_epsilon(cell_map)
         rendered = " ".join(
             f"{e:.2f}:{'-' if w is None else f'{w:g}'}" for e, w in stair.items()
         )
-        print(f"{label:<26}{ceiling:>9.2f}{best:>11.2f}   {rendered}")
+        print(f"{label:<26}{format_ceiling(cell_map):>9}{best:>11.2f}   {rendered}")
 
 
     _banner("Roster sensitivity: how much of the answer is the cast?")
@@ -551,8 +613,8 @@ def verify_trimmed_roster(
         "cells changing their verdict."
     )
     print(
-        f"epsilon ceiling: pool {epsilon_ceiling(baseline):.2f}, "
-        f"trimmed {epsilon_ceiling(trimmed):.2f}"
+        f"epsilon ceiling: pool {format_ceiling(baseline)}, "
+        f"trimmed {format_ceiling(trimmed)}"
     )
     print()
     print(format_staircase(baseline, "pool:"))

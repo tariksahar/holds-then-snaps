@@ -289,10 +289,22 @@ def cap_binds(
 
 # --- Phase C: the (epsilon, w) sweep -----------------------------------------
 
-# Error rates. 0 anchors the grid to the Phase A/B result; 0.2 is high enough
-# that one move in five is wrong, which is past any plausible reading of "noisy"
-# and well past where the interesting structure is.
-ERROR_RATE_GRID: tuple[float, ...] = tuple(round(0.02 * k, 2) for k in range(11))
+# Error rates. 0 anchors the grid to the Phase A/B result.
+#
+# The axis originally stopped at 0.20 on the assumption that one move in five
+# being wrong was past anything interesting. On the seven-strategy control that
+# was true - it collapses by 0.16. On the fifteen-strategy pool it is not: the
+# pool was still sustaining a 0.67-0.70 cooperation rate in the last column,
+# which means every "ceiling = 0.20" that came out of that grid recorded the
+# edge of the ruler rather than the edge of the phenomenon (D-033).
+#
+# Extended to 0.35. The 0.02 spacing of the original columns is preserved
+# exactly so that the cells already computed remain valid and are merged rather
+# than recomputed; only the final step, 0.34 to 0.35, is shorter, and it is
+# there because 0.35 is the stated endpoint.
+ERROR_RATE_GRID: tuple[float, ...] = tuple(
+    round(0.02 * k, 2) for k in range(18)
+) + (0.35,)
 
 # Continuation probabilities, chosen so that (1 - w) - which is what the D-020
 # prediction is stated in terms of - is spread geometrically rather than w

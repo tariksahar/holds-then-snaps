@@ -1131,29 +1131,54 @@ contract, and the Gradual bug shows why that contract is worth keeping).
 sub-rosters, drawn at five sizes, every one re-derived from the *same* saved
 matrices so that no difference between rosters can be sampling noise.
 
-| roster size | ε ceiling: min | median | max | mean \|Δ map\| vs pool |
-|---|---|---|---|---|
-| 5 | 0.06 | 0.20 | 0.20 | 0.203 |
-| 7 | **0.14** | 0.20 | 0.20 | 0.141 |
-| 9 | 0.16 | 0.20 | 0.20 | 0.109 |
-| 11 | 0.16 | 0.20 | 0.20 | 0.080 |
-| 13 | 0.20 | 0.20 | 0.20 | 0.045 |
+> **Corrected by D-033 and D-034. Every `0.20` in the ceiling columns below is
+> right-censored — 0.20 was the largest value the grid could produce, so those
+> entries record only that the roster had not broken by the last column looked
+> at. Read them as "> 0.20, located in D-034". The `mean |Δ map|` column is
+> uncensored and unaffected, and it is the column this entry should have led
+> with.**
 
-**Two things, and the second is the one that matters.**
+**The uncensored finding, first.** Sensitivity to composition falls steeply and
+monotonically with roster size:
 
-First, sensitivity falls monotonically with size: a five-strategy roster moves
-the map by 0.203 on average against the pool, a thirteen-strategy one by 0.045.
-Composition is not a small correction at small sizes - it is a fifth of the
-whole scale.
+| roster size | mean \|Δ map\| vs pool |
+|---|---|
+| 5 | 0.203 |
+| 7 | 0.141 |
+| 9 | 0.109 |
+| 11 | 0.080 |
+| 13 | 0.045 |
 
-Second, and this is the finding: **the median ceiling is 0.20 at every size.**
-The typical roster of any size sustains cooperation across the entire ε range
-tested. What varies is the *minimum* - and at size 7 the minimum is 0.14, which
-is exactly what our original seven scored. The ceiling reported in D-028 was
-therefore not the typical behaviour of a seven-strategy roster. It was close to
+A five-strategy roster moves the map by a fifth of the whole scale against the
+pool; a thirteen-strategy one by a twenty-second of it. How much the answer
+depends on the cast is itself a strong function of how big the cast is, and
+this needs no ceiling to state.
+
+**The ceiling columns, with the censoring made explicit:**
+
+| roster size | ε ceiling: min | median | max |
+|---|---|---|---|
+| 5 | 0.06 | > 0.20 | > 0.20 |
+| 7 | **0.14** | > 0.20 | > 0.20 |
+| 9 | 0.16 | > 0.20 | > 0.20 |
+| 11 | 0.16 | > 0.20 | > 0.20 |
+| 13 | > 0.20 | > 0.20 | > 0.20 |
+
+The min column is largely uncensored and shows a real floor rising with size:
+the worst roster you can draw gets steadily less bad. That supports the claim
+below in direction. What it cannot support is any statement about the *median*
+roster, because more than half the rosters at every size survived past the edge
+of the ruler.
+
+**The claim this entry was built to make, restated within what was measured.**
+At size 7 the worst draw scores 0.14 — and 0.14 is exactly what our original
+seven scored. Against an uncensored spread of 0.06 to 0.16 across the size-7
+minima, the seven sat at the bottom. The ceiling reported in D-028 was
+therefore not typical behaviour for a seven-strategy roster; it was close to
 the worst available, because the seven were selected for a world without
 mistakes and contained no mechanism for handling one. D-027 predicted this
-defect on principle before it was measured; it is now measured.
+defect on principle before it was measured. What cannot be said from this table
+is *how far* below typical it sat, because the typical value was off-scale.
 
 This also puts a number on D-010, which is where the project started. Removing
 one strategy changed the Phase A winner; the same instability, measured
@@ -1205,17 +1230,35 @@ from the ranking and then measured:
 
 | roster | mean \|Δ map\| | cells flipped (of 88) | ε ceiling |
 |---|---|---|---|
-| pool of 15 | — | — | 0.20 |
-| trimmed to 12 | 0.0179 | 2 | 0.20 |
-| **trimmed to 10** | **0.0270** | **3** | **0.20** |
-| trimmed to 8 | 0.0499 | 5 | 0.20 |
+| pool of 15 | — | — | > 0.20 |
+| trimmed to 12 | 0.0179 | 2 | > 0.20 |
+| **trimmed to 10** | **0.0270** | **3** | > 0.20 |
+| trimmed to 8 | 0.0499 | 5 | > 0.20 |
 
-Ten is the recommendation: it holds the ceiling, holds the staircase to within
-one grid step, and moves the map by 0.027 — less than the 0.045 that separates
-a *thirteen*-strategy roster from the pool in D-030. Twelve is the conservative
-choice at 0.018. Eight is where the staircase starts to shift: it sustains
-cooperation at w = 0.7 where the pool needs w = 0.8 across ε = 0.10–0.14, which
-is a real change in the reported answer, not a rounding difference.
+**The yardstick these should be read against is 0.054**, and it was already in
+hand. D-029 measured it: re-running a sub-roster instead of taking its
+submatrix moves cells by up to 0.054, because the error and continuation draws
+are keyed by roster position. That is the scale at which a difference between
+two maps stops being a difference and starts being the seed.
+
+So the statement is sharper than "0.027 is small":
+
+| roster | Δ map | against seed noise (0.054) |
+|---|---|---|
+| trimmed to 12 | 0.0179 | a third of it |
+| **trimmed to 10** | **0.0270** | **half of it** |
+| trimmed to 8 | 0.0499 | at it |
+
+**Trimming to ten changes the map less than changing the random seed does.**
+That is the recommendation's actual justification. Eight sits at the noise
+scale, which is a second and independent reason to stop at ten — and it is a
+better comparison than setting 0.027 against D-030's 0.045, since both of those
+are below 0.054 and neither is a natural unit of anything.
+
+Eight is also where the staircase starts to shift: it sustains cooperation at
+w = 0.7 where the pool needs w = 0.8 across ε = 0.10–0.14, which is a change in
+the reported answer rather than a rounding difference. Twelve is the
+conservative choice at a third of seed noise.
 
 **What each dropped strategy failed to change**, since a dropped strategy is
 owed a reason:
@@ -1239,13 +1282,43 @@ owed a reason:
   a calming phase; between Two-Tits-for-Tat's fixed escalation and Contrite
   TFT's de-escalation, the space it occupies is already covered.
 
+**The trim applies to the Phase C map and to nothing else.** Two of the five
+strategies it drops — Always Cooperate and Tit-for-Two-Tats — are members of
+the seven-strategy roster on which the Phase A and Phase B results were
+computed. Those results are not re-derived here and must not be restated as
+though they were: D-016's finding that **Always Cooperate survives at 13%** is
+a fact about the seven-strategy roster at ε = 0, and it is one of the sharper
+findings in the project precisely because a strategy that cannot defend itself
+survived. Dropping Always Cooperate from a Phase C roster does not retract it.
+
+The report has to carry the scoping explicitly rather than leave a reader to
+assume one roster throughout:
+
+| result | roster it belongs to |
+|---|---|
+| Phase A leaderboard, D-010 | the seven |
+| Phase B survivors and D-016's neutral mixture | the seven |
+| D-019 initial-conditions sweep, D-020 basin scaling | the seven |
+| D-026 predictions (a) and (b) | the three-strategy basin probe |
+| D-028 ε ceiling and the Grim re-emergence | the seven |
+| the Phase C map, D-030 to D-032 | the fifteen-strategy pool |
+| **this recommendation** | **Phase C only** |
+
 **Rejected:** Recommending a roster from the ranking without measuring it.
 The ranking is a guide to *what to try*, and the composition failure above is
-exactly the mistake it would have licensed.
+exactly the mistake it would have licensed. Also rejected: applying the trim
+backwards to Phases A and B, which would have quietly deleted the population
+that produced D-016.
 
 ---
 
 ### D-032 — Contrite TFT raises the ε ceiling, but is not what holds it up
+
+> **Substantially corrected by D-034.** The "sufficient but not necessary"
+> conclusion below rests on comparing two right-censored numbers that only
+> looked equal. Uncensored, removing Contrite TFT costs 0.08 of ceiling
+> (0.30 → 0.22): it is load-bearing. And the largest single contributor is
+> Soft Majority, not Contrite. Read D-034 with this entry.
 
 **Date:** 2026-09-03
 **Decided:** D-028's reading is confirmed and refined. The ceiling near
@@ -1373,3 +1446,134 @@ cooperation — it is that **indicators fail before the thing they measure does*
 and every instance has been visible only by returning to what was underneath.
 Right-censoring is the textbook name for this one, which makes it the cleanest
 of the four to write up.
+
+---
+
+### D-034 — The ε axis extended to 0.35: the pool's ceiling is 0.30, and three earlier readings change
+
+**Date:** 2026-09-04
+**Decided:** D-033 acted on. `ERROR_RATE_GRID` runs to 0.35, the 320 new cells
+were computed and merged into the existing 440 rather than recomputing them,
+and every censored number in D-029 to D-032 is now replaced by a measured one.
+
+**The merge was checked before it was trusted.** A saved cell was recomputed
+with the current code and compared bit for bit; the extension refuses to merge
+unless it reproduces exactly, because a merged grid spliced from two different
+versions of the code would be a silent fabrication. It reproduced.
+
+**The pool breaks at ε = 0.30.** Cooperation rate along w = 0.99:
+
+| ε | 0.20 | 0.24 | 0.28 | **0.30** | 0.32 | 0.34 |
+|---|---|---|---|---|---|---|
+| rate | 0.70 | 0.66 | 0.63 | **0.55** | 0.38 | 0.34 |
+| normalised | 0.84 | 0.81 | 0.79 | **0.63** | 0.16 | 0.01 |
+
+The normalised row is the cooperation rate rescaled onto the range the error
+rate permits — a population that always intends to cooperate still only plays C
+a fraction `1 − ε` of the time, and one that always intends to defect still
+plays C a fraction `ε` of the time, so the observable rate is confined to
+`[ε, 1 − ε]`, a band that narrows as ε grows. Rescaling to `(rate − ε)/(1 − 2ε)`
+puts 0 at total defection and 1 at total cooperation whatever the error rate.
+**Both readings give a ceiling of 0.30**, so it is a property of the population
+and not of where the cutoff was drawn.
+
+**And the collapse is a cliff, not an erosion.** The normalised index sits above
+0.78 all the way from ε = 0 to ε = 0.28 — a population absorbing more than one
+mistaken move in four and still cooperating at four-fifths of what the noise
+allows. Then, in two grid steps, 0.63 → 0.16 → 0.01. Cooperation does not
+degrade gracefully under noise; it holds and then goes.
+
+**Correction 1 — D-030's sensitivity table, now uncensored.**
+
+| size | ceiling: min | median | max | mean \|Δ map\| |
+|---|---|---|---|---|
+| 5 | 0.06 | 0.31 | ≥ 0.35 | 0.177 |
+| 7 | **0.14** | 0.26 | ≥ 0.35 | 0.125 |
+| 9 | 0.16 | 0.30 | ≥ 0.35 | 0.099 |
+| 11 | 0.16 | 0.30 | ≥ 0.35 | 0.071 |
+| 13 | 0.20 | 0.30 | 0.32 | 0.037 |
+
+The median is now a number rather than a wall: 0.26 to 0.31, not "0.20". The max
+column is *still* censored at sizes 5 to 11, where the best draws survive past
+0.35 — marked `≥`, not fixed, and it is not worth another extension to chase.
+
+This is what makes D-030's claim about the original seven quantitative at last.
+At size 7 the median roster breaks at 0.26 and the worst observed at 0.14. Our
+seven scored **0.14** — the minimum of 24 draws. Before the extension the
+comparison was against a censored median and could not be made; now it can:
+the seven were not merely below typical, they were at the floor.
+
+**Correction 2 — D-031's trimming, on the wider grid.**
+
+| roster | mean \|Δ map\| | vs seed noise (0.054) | cells flipped (of 152) | ε ceiling |
+|---|---|---|---|---|
+| trimmed to 12 | 0.0145 | a quarter of it | 4 | 0.30 |
+| **trimmed to 10** | **0.0290** | **half of it** | 9 | 0.30 |
+| trimmed to 8 | 0.0381 | two thirds of it | 8 | 0.30 |
+
+All three hold the ceiling at 0.30, and all three move the map by less than
+changing the random seed does. The recommendation stays at **ten**, with two
+caveats now visible that were not before. First, twelve is materially cleaner —
+a quarter of seed noise against a half, and 4 flipped cells against 9. Second,
+the flip counts do not order themselves (4, 9, 8 for 12, 10, 8), which is what
+a measure jittering at the noise scale looks like; they should not be the
+deciding criterion on their own.
+
+**The membership of the recommended ten has changed**, because the influence
+order changed once the extra columns were included: Prober enters and Random
+leaves. The ten are now Always Defect, Contrite TFT, Soft Majority, Suspicious
+TFT, Alternator, Tit-for-Tat, Grim Trigger, Two-Tits-for-Tat, Pavlov, Prober.
+Always Cooperate and Tit-for-Two-Tats are still dropped, so D-031's scoping
+note stands unchanged: **the trim is for the Phase C map only**, and D-016's
+Always Cooperate finding belongs to the seven.
+
+**Correction 3, and the largest — D-032 was reading two censored numbers as
+equal.** On the old grid, "pool − Contrite = 0.20" and "pool = 0.20" looked
+identical and licensed the conclusion that Contrite TFT was *sufficient but not
+necessary*. Both were lower bounds. Uncensored, at five replicates:
+
+| roster | ε ceiling |
+|---|---|
+| control 7 | 0.14 |
+| control 7 + Contrite TFT | 0.18 |
+| **pool 15 − Contrite TFT** | **0.22** |
+| pool 15 | **0.30** |
+
+Removing Contrite Tit-for-Tat from the pool costs **0.08 of ceiling** — more
+than a quarter of it. It is load-bearing, not redundant, and the earlier
+"not necessary" was an artifact of the ruler.
+
+What survives from D-032 is the weaker and still-correct half: Contrite is not
+*solely* responsible, because the pool without it still reaches 0.22, well
+above the seven's 0.14. And the single largest contributor is not Contrite at
+all:
+
+| strategy removed | ε ceiling | Δ map |
+|---|---|---|
+| **Soft Majority** | **0.20** | 0.041 |
+| Contrite TFT | 0.22 | 0.066 |
+| Always Defect | 0.30 | 0.098 |
+| Generous TFT | 0.30 | 0.003 |
+| Tit-for-Two-Tats | 0.30 | 0.001 |
+
+**Soft Majority costs 0.10 of ceiling when removed, against Contrite's 0.08.**
+It is the only pool member with unbounded memory: it judges the whole record
+rather than the last move or two, so at high error rates an isolated mistake is
+diluted by everything that came before it instead of triggering anything. That
+is a second, quite different way of not letting one error start an echo, and at
+the top of the ε range it is worth slightly more than contrition.
+
+Note also that Always Defect has the largest effect on the *map* (0.098) and no
+effect on the *ceiling*. The two measure different things, and D-031's ranking
+by mean map shift should not be read as a ranking by importance to the ceiling.
+
+**The lesson D-033 named, confirmed by its own repair.** Extending the ruler did
+not merely fill in a blank — it reversed a published conclusion (Contrite
+"unnecessary" → load-bearing) and promoted a strategy that had been ranked
+third by map shift to first by ceiling contribution. That is what
+right-censoring costs: not imprecision, but wrong answers stated confidently.
+
+**Rejected:** Reporting any ceiling from the 0.20 grid. Also rejected:
+extending further to uncensor the `max` column of the sensitivity table — the
+quantity that matters there is the minimum and the median, both of which are
+now measured, and the best-case roster is not a claim the report needs.

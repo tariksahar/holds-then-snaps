@@ -789,16 +789,116 @@ def main(
         )
 
 
+
+def load_saved_matrices(directory: Path = RESULTS_DIR):
+    """Payoff and cooperation matrices from a saved sweep, keyed by cell."""
+    with np.load(directory / "phase_c_matrices.npz", allow_pickle=False) as data:
+        names = tuple(str(n) for n in data["names"])
+        keys = [(round(float(a), 4), round(float(b), 4), int(c)) for a, b, c in data["keys"]]
+        payoff = {key: data["matrices"][i] for i, key in enumerate(keys)}
+        cooperation = {key: data["cooperation"][i] for i, key in enumerate(keys)}
+    return names, payoff, cooperation
+
+
+def extend_grid() -> None:
+    """Compute only the (epsilon, w, replicate) cells the saved sweep lacks.
+
+    `M[i, j]` at one grid point does not depend on any other grid point, so
+    widening the epsilon axis does not invalidate the columns already computed.
+    They are merged rather than recomputed - which is what makes fixing D-033
+    cost a third of a sweep instead of a whole one.
+
+    Before merging, one already-saved cell is recomputed and compared bit for
+    bit. If the code that produced the old columns and the code running now
+    disagreed about anything, the merged grid would be a silent splice of two
+    different experiments, and that check is the only thing standing between
+    this shortcut and that outcome.
+    """
+    existing_points, names = load_saved_grid()
+    saved_names, payoff, cooperation = load_saved_matrices()
+    if saved_names != tuple(POOL_CONFIG.roster):
+        raise ValueError(
+            f"saved sweep is for a different roster: {saved_names}"
+        )
+
+    # --- integrity check, before anything is merged ---
+    probe_key = min(payoff)
+    epsilon, w, replicate = probe_key
+    print(f"Integrity check: recomputing cell eps={epsilon} w={w} rep={replicate}")
+    _, probe = evaluate_point(epsilon, w, replicate)
+    if not np.array_equal(probe.payoff_matrix, payoff[probe_key]):
+        worst = np.abs(probe.payoff_matrix - payoff[probe_key]).max()
+        raise ValueError(
+            "recomputing a saved cell did not reproduce it (max difference "
+            f"{worst:.3g}). The current code is not the code that produced "
+            "the saved sweep, so the new columns cannot be merged into it. "
+            "Re-run the whole grid instead."
+        )
+    print("  reproduced bit for bit; merging is safe.\n")
+
+    existing_keys = set(payoff)
+    wanted = [
+        (round(epsilon, 4), round(w, 4), replicate)
+        for w in CONTINUATION_GRID
+        for epsilon in ERROR_RATE_GRID
+        for replicate in range(SWEEP_REPLICATES)
+    ]
+    missing = [key for key in wanted if key not in existing_keys]
+    print(
+        f"{len(existing_keys)} cells already saved, {len(missing)} to compute, "
+        f"{len(wanted)} total."
+    )
+
+    points = list(existing_points)
+    done = 0
+    for epsilon, w, replicate in missing:
+        if cap_binds(w, DEFAULT_CONFIG.rounds):
+            raise ValueError(f"the hard round cap binds at w={w}")
+        point, tournament = evaluate_point(epsilon, w, replicate)
+        points.append(point)
+        payoff[(epsilon, w, replicate)] = tournament.payoff_matrix
+        cooperation[(epsilon, w, replicate)] = tournament.cooperation_matrix
+        done += 1
+        if done % SWEEP_REPLICATES == 0:
+            print(
+                f"  eps={epsilon:<5} w={w:<5} [{done:>4}/{len(missing)}] "
+                f"coop={point.cooperation_rate:.3f} "
+                f"survivors={len(point.survivors)}"
+            )
+
+    # Keep the file ordered by (w, epsilon, replicate) so the merged sweep is
+    # laid out the way a freshly run one would be.
+    order = sorted(payoff, key=lambda key: (key[1], key[0], key[2]))
+    ordered_payoff = {key: payoff[key] for key in order}
+    ordered_cooperation = {key: cooperation[key] for key in order}
+    points.sort(
+        key=lambda p: (p.continuation_probability, p.error_rate, p.replicate)
+    )
+
+    paths = save_grid(points, ordered_payoff, names, cooperation=ordered_cooperation)
+    print(f"\nMerged sweep written: {len(points)} rows.")
+    for label, path in paths.items():
+        print(f"  {label:<9} {path}")
+
+    _banner("The extended map: where does cooperation actually break?")
+    print(format_cooperation_map(points))
+    print()
+    print(format_convergence(points))
+
+
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Phase C experiments.")
     parser.add_argument(
         "--only",
-        choices=("grid", "predictions", "report"),
+        choices=("grid", "predictions", "report", "extend"),
         help="run just one half; default runs both",
     )
     args = parser.parse_args()
+    if args.only == "extend":
+        extend_grid()
+        raise SystemExit(0)
     main(
         run_grid_part=args.only not in ("predictions", "report"),
         run_predictions=args.only not in ("grid", "report"),

@@ -244,3 +244,25 @@ def test_roster_map_agrees_with_the_per_cell_path() -> None:
         assert cell_map[(epsilon, w)] == pytest.approx(rate, abs=1e-9)
         assert survivors[(epsilon, w, replicate)] == survived
         break
+
+
+def test_a_ceiling_at_the_edge_of_the_grid_is_reported_as_censored() -> None:
+    """D-033's error, made impossible to repeat silently.
+
+    A roster still cooperating in the last column has not shown a ceiling; it
+    has shown that the grid stopped first. The two must not render the same.
+    """
+    import roster_analysis as ra
+
+    still_going = {(0.0, 0.9): 0.9, (0.1, 0.9): 0.8, (0.2, 0.9): 0.7}
+    assert ra.epsilon_ceiling(still_going) == 0.2
+    assert ra.ceiling_is_censored(still_going)
+    assert ra.format_ceiling(still_going) == "> 0.20"
+
+    broke_first = {(0.0, 0.9): 0.9, (0.1, 0.9): 0.8, (0.2, 0.9): 0.2}
+    assert ra.epsilon_ceiling(broke_first) == 0.1
+    assert not ra.ceiling_is_censored(broke_first)
+    assert ra.format_ceiling(broke_first) == "0.10"
+
+    never = {(0.0, 0.9): 0.05, (0.2, 0.9): 0.2}
+    assert ra.format_ceiling(never) == "none"

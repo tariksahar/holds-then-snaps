@@ -63,6 +63,15 @@ sweep (mean deviation 0.0029, D-028).
   120-draw sub-roster sensitivity sweep.
 - `roster_trimmed.log` — the influence ranking and the trimmed rosters
   (8/10/12) measured against the pool.
+- `phase_c_extend.log` — the ε axis extended from 0.20 to 0.35 (D-033, D-034),
+  including the integrity check that the 320 new cells were merged into the
+  440 existing ones only after the current code reproduced a saved cell bit for
+  bit.
+
+**The ε axis runs to 0.35, and it matters that it does.** The grid originally
+stopped at 0.20, where the pool was still cooperating at 0.67–0.70 — so every
+"ceiling = 0.20" recorded the edge of the ruler rather than a property of the
+roster. The pool's actual ceiling is 0.30.
 
 Both are produced from `phase_c_matrices.npz` alone. No match is re-simulated,
 which is why every roster in them shares one sample and a difference between

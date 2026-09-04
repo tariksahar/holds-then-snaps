@@ -50,8 +50,20 @@ be described.
 - No magic numbers. Every parameter is configuration.
 - RNG: explicit generator objects seeded from one documented root seed. No
   global seeding. Stochastic results always averaged over repeated trials.
-- Repo name deferred until Phase C results are in. Working folder name is
-  `evolutionary-game-sim`; it is provisional.
+- **Repo: `tariksahar/evolutionary-game-sim`, private.** It stays private until
+  the report is finished. The name is still provisional — D-004 defers the
+  final name until the finding is settled, and renaming on GitHub is cheap and
+  redirects old links.
+- **Version control starts at the initial commit, which is after the roster
+  expansion.** There is therefore no commit containing exactly the code that
+  produced the seven-strategy control map. What exists is its *data*, frozen
+  under `results/control7_*`, plus the ability to re-derive the seven from the
+  current code (`strategies.CONTROL_ROSTER`) — and `roster_analysis.py` does
+  exactly that, re-deriving the control map from the pool's own matrices. Do
+  not describe the control as having a clean commit of its own; it does not.
+- From here on, **commit at the end of every phase.** `decisions.md` records
+  what was decided and why; git records what changed and when. The two are not
+  substitutes.
 - Report format: undecided.
 - Configuration is `config.py` (frozen `Config` dataclass + `DEFAULT_CONFIG`),
   not YAML — D-006.
@@ -230,11 +242,24 @@ from equal shares. D-030 to D-032.
 | 0.12 | 0.16 | 0.16 | 0.19 | 0.79 | 0.81 | 0.80 | 0.80 | 0.80 |
 | 0.16 | 0.16 | 0.16 | 0.16 | 0.39 | 0.75 | 0.75 | 0.75 | 0.75 |
 | 0.20 | 0.20 | 0.20 | 0.19 | 0.20 | 0.67 | 0.70 | 0.70 | 0.70 |
+| 0.24 | 0.24 | 0.24 | 0.24 | 0.24 | 0.24 | 0.42 | 0.66 | 0.66 |
+| 0.28 | 0.28 | 0.28 | 0.28 | 0.28 | 0.28 | 0.28 | 0.63 | 0.63 |
+| 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | 0.30 | 0.43 | **0.55** |
+| 0.32 | 0.32 | 0.32 | 0.32 | 0.32 | 0.32 | 0.33 | 0.33 | 0.38 |
+| 0.35 | 0.35 | 0.35 | 0.35 | 0.35 | 0.35 | 0.36 | 0.36 | 0.35 |
 
-**There is no ε ceiling on the pool.** Cooperation survives at ε = 0.20, the
-top of the grid, given w ≥ 0.9. The same seven strategies re-derived from the
-same matrices collapse above ε = 0.14, reproducing D-028 exactly. Expanding the
-roster moves the map by 0.215 on average and 0.863 at most.
+**The pool breaks at ε = 0.30** — D-034, on the axis extended to 0.35. Along
+w = 0.99 the cooperation rate runs 0.70 (ε=0.20) → 0.63 (0.28) → **0.55
+(0.30)** → 0.38 (0.32) → 0.34 (0.34, which equals ε: total defection). The same
+ceiling comes out of the raw rate and of the rate normalised onto `[ε, 1−ε]`,
+so it is the population and not the cutoff.
+
+**The collapse is a cliff.** Normalised, cooperation sits above 0.78 from ε = 0
+all the way to 0.28, then falls 0.63 → 0.16 → 0.01 in two grid steps. It holds,
+and then it goes.
+
+The seven re-derived from the same matrices collapse above ε = 0.14. Expanding
+the roster moves the map by 0.153 on average and 0.863 at most.
 
 **Where the ceiling came from.** Across 120 random sub-rosters the *median* ε
 ceiling is 0.20 at every size from 5 to 13. What varies is the minimum, and at
@@ -249,21 +274,41 @@ against the pool is 0.203 at size 5, 0.141 at 7, 0.045 at 13.
 |---|---|
 | control 7 | 0.14 |
 | control 7 + Contrite TFT | **0.18** |
-| pool 15 − Contrite TFT | 0.20 |
-| pool 15 | 0.20 |
+| pool 15 − Contrite TFT | **0.22** |
+| pool 15 | **0.30** |
 
 Adding one error-aware strategy to the original seven lifts the ceiling from
 0.14 to 0.18 with nothing about the noise changed — the ceiling was about
-error-handling, as D-028 argued. But it is not Contrite's alone: the pool
-without it still reaches 0.20, because Soft Majority, Generous TFT and
-Tit-for-Two-Tats each break the echo their own way. Contrite is the most
-efficient (2nd of 15 by influence, 1st by survivor churn) and buys about one
-grid step of horizon, not the ceiling itself.
+error-handling, as D-028 argued. **Removing Contrite from the pool costs 0.08
+of ceiling (0.30 → 0.22): it is load-bearing, not redundant.** The earlier
+"sufficient but not necessary" reading came from comparing two censored
+numbers and is corrected in D-034.
+
+It is still not Contrite's alone — the pool without it reaches 0.22, well above
+the seven's 0.14 — and the largest single contributor is **Soft Majority**,
+whose removal costs 0.10. Soft Majority is the only pool member with unbounded
+memory: it judges the whole record, so an isolated mistake is diluted rather
+than answered. A different way of refusing the echo, and at high ε worth
+slightly more than contrition.
+
+Note that Always Defect moves the *map* most (Δ 0.098) and the *ceiling* not at
+all. Ranking by map shift is not ranking by importance to the ceiling.
 
 **Recommended roster: the 10 most influential** — Always Defect, Contrite TFT,
-Suspicious TFT, Soft Majority, Alternator, Tit-for-Tat, Two-Tits-for-Tat, Grim
-Trigger, Pavlov, Random. Verified against the pool: Δ map 0.027, 3 of 88 cells
-flip, ceiling unchanged. Dropped with reasons in D-031.
+Soft Majority, Suspicious TFT, Alternator, Tit-for-Tat, Grim Trigger,
+Two-Tits-for-Tat, Pavlov, Prober. (Membership changed on the extended grid:
+Prober in, Random out.) Verified against the pool: Δ map 0.029, 9 of 152 cells
+flip, ceiling unchanged at 0.30. **Trimming to ten changes the map less than
+changing the random seed does** — D-029 measured seed noise at up to 0.054.
+Twelve is materially cleaner (Δ 0.0145, 4 cells) and is the conservative
+choice. Dropped with reasons in D-031, revised in D-034.
+
+**The trim is for Phase C only. Do not apply it backwards.** It drops Always
+Cooperate and Tit-for-Two-Tats, both members of the seven on which Phases A and
+B were computed — and D-016's "Always Cooperate survives at 13%" is a fact
+about that roster, not a claim the trim retracts. Which result belongs to which
+roster is tabulated in D-031, and the report must carry that table rather than
+let a reader assume one cast from start to finish.
 
 ## Open — decide with code in front of us, not in advance
 
