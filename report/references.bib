@@ -1,9 +1,28 @@
 % Background reading for the report.
 %
-% Verify volume, issue and page numbers against the originals before
-% submitting anything: they are from memory and have not been checked against
-% a database from this machine.
+% Provenance is recorded per entry, because "checked" and "not checked" are
+% different states and a bibliography that does not distinguish them is making
+% the project's recurring error in a new place.
+%
+%   [publisher]  checked against the publisher's own record.
+%   [crossref]   checked against the Crossref API by bibliographic query;
+%                volume, issue, pages, year and DOI are as Crossref returns
+%                them.
+%   [UNCHECKED]  not confirmed against any authoritative source. Do not cite
+%                the details without looking them up.
+%
+% Nine of the eleven entries are confirmed. One monograph is not: Crossref
+% indexes reviews of Axelrod (1984) rather than the book itself, so its
+% publisher and year are from memory and are marked accordingly.
 
+% [UNCHECKED] No authoritative record found via Crossref, which returns
+% reviews of this book rather than the book itself. Publisher, address and year
+% are from memory. Verify against the printed edition or a library catalogue
+% before submission.
+%
+% (Comments must sit outside the entry: inside braces BibTeX does not treat %
+% as a comment character, and a note placed there silently corrupts the field
+% list.)
 @book{axelrod1984,
   author    = {Axelrod, Robert},
   title     = {The Evolution of Cooperation},
@@ -12,6 +31,7 @@
   year      = {1984}
 }
 
+% [publisher]
 @article{axelrod1981,
   author  = {Axelrod, Robert and Hamilton, William D.},
   title   = {The Evolution of Cooperation},
@@ -19,27 +39,36 @@
   volume  = {211},
   number  = {4489},
   pages   = {1390--1396},
-  year    = {1981}
+  year    = {1981},
+  doi     = {10.1126/science.7466396}
 }
 
+% [crossref]
 @book{maynardsmith1982,
   author    = {Maynard Smith, John},
   title     = {Evolution and the Theory of Games},
   publisher = {Cambridge University Press},
   address   = {Cambridge},
-  year      = {1982}
+  year      = {1982},
+  isbn      = {9780521288842},
+  doi       = {10.1017/CBO9780511806292}
 }
 
+% [crossref] Crossref indexes the title as "Evolutionary stable strategies and
+% game dynamics"; it is frequently cited as "Evolutionarily stable ...". The
+% indexed form is used here.
 @article{taylor1978,
   author  = {Taylor, Peter D. and Jonker, Leo B.},
-  title   = {Evolutionarily Stable Strategies and Game Dynamics},
+  title   = {Evolutionary Stable Strategies and Game Dynamics},
   journal = {Mathematical Biosciences},
   volume  = {40},
   number  = {1--2},
   pages   = {145--156},
-  year    = {1978}
+  year    = {1978},
+  doi     = {10.1016/0025-5564(78)90077-9}
 }
 
+% [publisher]
 @article{boyd1987,
   author  = {Boyd, Robert and Lorberbaum, Jeffrey P.},
   title   = {No Pure Strategy is Evolutionarily Stable in the Repeated
@@ -47,9 +76,11 @@
   journal = {Nature},
   volume  = {327},
   pages   = {58--59},
-  year    = {1987}
+  year    = {1987},
+  doi     = {10.1038/327058a0}
 }
 
+% [crossref]
 @article{boyd1989,
   author  = {Boyd, Robert},
   title   = {Mistakes Allow Evolutionary Stability in the Repeated Prisoner's
@@ -58,18 +89,23 @@
   volume  = {136},
   number  = {1},
   pages   = {47--56},
-  year    = {1989}
+  year    = {1989},
+  doi     = {10.1016/S0022-5193(89)80188-2}
 }
 
+% [publisher]
 @article{nowak1992,
   author  = {Nowak, Martin A. and Sigmund, Karl},
   title   = {Tit for Tat in Heterogeneous Populations},
   journal = {Nature},
   volume  = {355},
+  number  = {6357},
   pages   = {250--253},
-  year    = {1992}
+  year    = {1992},
+  doi     = {10.1038/355250a0}
 }
 
+% [publisher]
 @article{nowak1993,
   author  = {Nowak, Martin A. and Sigmund, Karl},
   title   = {A Strategy of Win-Stay, Lose-Shift that Outperforms Tit-for-Tat
@@ -77,9 +113,11 @@
   journal = {Nature},
   volume  = {364},
   pages   = {56--58},
-  year    = {1993}
+  year    = {1993},
+  doi     = {10.1038/364056a0}
 }
 
+% [crossref]
 @article{molander1985,
   author  = {Molander, Per},
   title   = {The Optimal Level of Generosity in a Selfish, Uncertain
@@ -88,9 +126,11 @@
   volume  = {29},
   number  = {4},
   pages   = {611--618},
-  year    = {1985}
+  year    = {1985},
+  doi     = {10.1177/0022002785029004004}
 }
 
+% [publisher]
 @article{wu1995,
   author  = {Wu, Jianzhong and Axelrod, Robert},
   title   = {How to Cope with Noise in the Iterated Prisoner's Dilemma},
@@ -98,9 +138,11 @@
   volume  = {39},
   number  = {1},
   pages   = {183--189},
-  year    = {1995}
+  year    = {1995},
+  doi     = {10.1177/0022002795039001008}
 }
 
+% [publisher]
 @article{knight2016,
   author  = {Knight, Vincent and Campbell, Owen and Harper, Marc and others},
   title   = {An Open Framework for the Reproducible Study of the Iterated
@@ -109,5 +151,6 @@
   volume  = {4},
   number  = {1},
   pages   = {e35},
-  year    = {2016}
+  year    = {2016},
+  doi     = {10.5334/jors.125}
 }

@@ -20,6 +20,7 @@ leave-one-out maps from the saved matrices rather than trusting a stored value.
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -47,15 +48,44 @@ def run(command: list[str], cwd: Path) -> int:
 
 def run_stage(script: str) -> None:
     print(f"\n=== {script} ===")
-    code = subprocess.call([sys.executable, str(ROOT / script)], cwd=ROOT)
+    # -u so the stage's progress appears live even when the build's own
+    # output is redirected to a file; report_data.py runs for tens of
+    # minutes and a silent pipe looks like a hang.
+    code = subprocess.call([sys.executable, "-u", str(ROOT / script)], cwd=ROOT)
     if code != 0:
         raise SystemExit(f"{script} failed with exit code {code}")
 
 
+# A fresh TeX install does not update the PATH of an already-open shell, so a
+# first build right after installing would report "no engine" from a machine
+# that has one. These are the default install locations worth looking in before
+# giving up.
+FALLBACK_BIN_DIRS = (
+    Path.home() / "AppData/Local/Programs/MiKTeX/miktex/bin/x64",
+    Path("C:/Program Files/MiKTeX/miktex/bin/x64"),
+    Path("/Library/TeX/texbin"),
+    Path("/usr/local/texlive/bin"),
+)
+
+
 def find_engine() -> str | None:
     for engine in ENGINES:
-        if shutil.which(engine):
-            return engine
+        found = shutil.which(engine)
+        if found:
+            return found
+    for directory in FALLBACK_BIN_DIRS:
+        if not directory.is_dir():
+            continue
+        for engine in ENGINES:
+            for candidate in (directory / engine, directory / f"{engine}.exe"):
+                if candidate.exists():
+                    # Put the whole directory on PATH: latexmk shells out to
+                    # pdflatex and bibtex, which must be findable too.
+                    os.environ["PATH"] = (
+                        f"{directory}{os.pathsep}{os.environ['PATH']}"
+                    )
+                    print(f"  found {engine} in {directory} (added to PATH)")
+                    return engine
     return None
 
 
@@ -77,6 +107,7 @@ def typeset() -> None:
         )
         raise SystemExit(2)
 
+    engine = Path(engine).stem
     print(f"  using {engine}")
     if engine == "latexmk":
         code = run(["latexmk", "-pdf", "-interaction=nonstopmode",

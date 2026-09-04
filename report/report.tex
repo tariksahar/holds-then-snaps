@@ -205,6 +205,12 @@
 \label{sec:decisions}
 % TODO
 
+% The section bodies are empty, so nothing cites anything yet and the
+% bibliography would come out blank - which would also mean the bibliography
+% pass had never actually been exercised by a build. \nocite{*} typesets every
+% entry, so `python build_report.py` is a real test of references.bib. Remove
+% it once the prose carries its own citations.
+\nocite{*}
 \bibliography{references}
 
 \end{document}

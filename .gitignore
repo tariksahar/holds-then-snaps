@@ -48,3 +48,19 @@ htmlcov/
 *.swp
 .DS_Store
 Thumbs.db
+
+# LaTeX build products. The report PDF is built, not committed: it is derived
+# from report/report.tex plus the committed figures, and `python
+# build_report.py` reproduces it. The figures themselves ARE committed - they
+# are inputs to the report and readable on the repository page without a TeX
+# installation.
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.out
+report/*.synctex.gz
+report/*.toc
+report/report.pdf

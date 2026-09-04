@@ -31,6 +31,12 @@ from matplotlib.colors import LinearSegmentedColormap
 RESULTS = Path(__file__).parent / "results"
 FIGURES = Path(__file__).parent / "figures"
 
+# Written into every PDF in place of a creation timestamp. Without this the
+# same figure rendered twice differs byte for byte, so `git status` after a
+# rebuild reports six changed files whether or not any number moved - which
+# makes the one signal that matters unreadable.
+REPRODUCIBLE_PDF_METADATA = {"CreationDate": None}
+
 # Serif to sit alongside the report's body text without looking pasted in.
 plt.rcParams.update(
     {
@@ -118,7 +124,7 @@ def figure1() -> Path:
               bbox_to_anchor=(1.0, -0.09))
 
     path = FIGURES / "fig1_map_pool.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
@@ -196,7 +202,7 @@ def figure2() -> Path:
     bottom.legend(frameon=False, fontsize=7.5, loc="lower left")
 
     path = FIGURES / "fig2_edge_profile.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
@@ -225,7 +231,7 @@ def figure3() -> Path:
     )
 
     path = FIGURES / "fig3_roster_comparison.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
@@ -272,7 +278,7 @@ def figure4() -> Path:
         "What each strategy was holding up", y=0.97, fontsize=10.5,
     )
     path = FIGURES / "fig4_influence.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
@@ -327,7 +333,7 @@ def figure5() -> Path:
     bottom.legend(frameon=False, fontsize=7.5, loc="lower right", ncol=2)
 
     path = FIGURES / "fig5_sensitivity.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
@@ -409,7 +415,7 @@ def figure6() -> Path:
     fig.subplots_adjust(right=0.74)
 
     path = FIGURES / "fig6_phase_b_trajectory.pdf"
-    fig.savefig(path)
+    fig.savefig(path, metadata=REPRODUCIBLE_PDF_METADATA)
     fig.savefig(path.with_suffix(".png"))
     plt.close(fig)
     return path
