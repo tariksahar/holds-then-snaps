@@ -1,0 +1,18 @@
+Deriving figure data from results/
+
+figure 1 - the (epsilon, w) map on the pool
+  wrote fig1_map_pool.csv (152 rows)
+figure 2 - the edge profile along w = 0.99
+  wrote fig2_edge_profile.csv (19 rows)
+figure 3 - pool against the pre-expansion control
+    pool ceiling 0.30, control ceiling 0.14, mean |delta| 0.1531, max 0.8627
+  wrote fig3_roster_comparison.csv (152 rows)
+figure 4 - leave-one-out influence (slow: re-derives 15 maps)
+  wrote fig4_influence.csv (15 rows)
+figure 5 - roster sensitivity by size
+  wrote fig5_sensitivity.csv (5 rows)
+figure 6 - Phase B trajectory
+    survivors ('Always Cooperate', 'Tit-for-Tat', 'Grim Trigger', 'Pavlov', 'Tit-for-Two-Tats'), settled at generation 59, fitness spread 0.00e+00
+  wrote fig6_phase_b_trajectory.csv (201 rows)
+
+Done.

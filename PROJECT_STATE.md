@@ -50,10 +50,12 @@ be described.
 - No magic numbers. Every parameter is configuration.
 - RNG: explicit generator objects seeded from one documented root seed. No
   global seeding. Stochastic results always averaged over repeated trials.
-- **Repo: `tariksahar/evolutionary-game-sim`, private.** It stays private until
-  the report is finished. The name is still provisional — D-004 defers the
-  final name until the finding is settled, and renaming on GitHub is cheap and
-  redirects old links.
+- **Repo: `tariksahar/holds-then-snaps`, private.** It stays private until the
+  report is finished. **The name is settled — D-036.** It is named for the
+  finding, as the earlier projects in this series are: normalised cooperation
+  holds at 0.788 through ε = 0.28, then falls to 0.162 two grid steps later.
+  The old `evolutionary-game-sim` URL redirects, so nothing that referenced it
+  breaks.
 - **Version control starts at the initial commit, which is after the roster
   expansion.** There is therefore no commit containing exactly the code that
   produced the seven-strategy control map. What exists is its *data*, frozen

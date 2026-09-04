@@ -1,0 +1,16 @@
+rank,strategy,mean_shift,max_shift,cells_flipped,survivor_changes,ceiling_without,ceiling_without_censored,ceiling_cost
+1,Always Defect,0.100934,0.556509,18,158,0.3,no,0.0000
+2,Contrite TFT,0.069805,0.340350,10,118,0.24,no,0.0600
+3,Soft Majority,0.053688,0.451598,15,36,0.2,no,0.1000
+4,Suspicious TFT,0.032124,0.628220,5,18,0.3,no,0.0000
+5,Alternator,0.023856,0.446910,4,20,0.3,no,0.0000
+6,Tit-for-Tat,0.022918,0.628220,4,19,0.3,no,0.0000
+7,Grim Trigger,0.019472,0.240376,3,29,0.3,no,0.0000
+8,Two-Tits-for-Tat,0.018277,0.381965,2,12,0.3,no,0.0000
+9,Pavlov,0.016946,0.318582,4,10,0.3,no,0.0000
+10,Prober,0.016398,0.292366,2,9,0.28,no,0.0200
+11,Random,0.015725,0.318582,4,12,0.3,no,0.0000
+12,Gradual,0.015003,0.196561,3,8,0.3,no,0.0000
+13,Always Cooperate,0.014480,0.196561,3,8,0.3,no,0.0000
+14,Generous TFT,0.013487,0.214215,1,5,0.3,no,0.0000
+15,Tit-for-Two-Tats,0.013348,0.214215,0,2,0.3,no,0.0000

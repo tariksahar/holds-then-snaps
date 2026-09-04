@@ -39,6 +39,11 @@ trust in the machinery. The third is the point.
 - `experiments.py` — Phase C: the (ε, w) sweep and the two standing predictions
 - `roster_analysis.py` — roster sensitivity and per-strategy influence
 - `trim_check.py` — verifies the trimmed roster against the full pool
+- `report_data.py` — derives the figure data from `results/`
+- `figures.py` — renders the figures from that data
+- `figures/` — the figures, plus `MANIFEST.md` saying which file holds which
+  numbers
+- `report/` — the LaTeX report and its bibliography
 - `results/` — the raw sweep data, committed: grid CSV, payoff matrices, metadata
 - `watch.py` — a viewing tool: one match, round by round
 - `tests/` — the named invariants, plus reproducibility and validation
@@ -54,6 +59,8 @@ python experiments.py    # Phase C: the map, plus both predictions tested
 python experiments.py --only report   # re-read results/ without re-running
 python roster_analysis.py      # roster sensitivity, influence, the ε ceiling
 python trim_check.py           # check the recommended roster against the pool
+python build_report.py         # data, figures, then the PDF
+python build_report.py --figures   # stop after the figures
 python -m pytest         # invariants and supporting tests
 
 # optional: cross-check the match engine against the Axelrod library

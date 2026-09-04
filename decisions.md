@@ -1667,3 +1667,50 @@ at the grid edge for roster sizes 5–11 and renders as `≥ 0.35`. Not chased
 further, which is a reasonable stopping point — but `ceiling_is_censored` /
 `format_ceiling` now make the distinction structural rather than a note someone
 has to remember, which is the right fix.
+
+---
+
+### D-036 — Repository name and report format, both deferred since the brief, now settled
+
+**Date:** 2026-09-04
+**Decided:** The repository is renamed **`holds-then-snaps`**. The report ships
+in two forms: a Markdown summary in the repository, and a full LaTeX/PDF
+report.
+
+**Why this name.** D-004 deferred it deliberately so the analysis could not be
+bent to fit a title, and the prior projects in this series are all named after
+their finding rather than their apparatus. The finding is the shape of the
+collapse: normalised cooperation holds at 0.788 through an error rate of 28%,
+then falls to 0.162 two grid steps later. Cooperation does not erode under
+noise — it holds, and then it snaps.
+
+Rejected: `evolutionary-game-sim`, which names the apparatus and would break
+the naming pattern; and `the-instrument-fails-first`, which names the
+methodological theme. That theme is the discussion section's argument and the
+more transferable lesson, but a repository should be named for what it
+studied, not for what its author learned about measurement while studying it.
+
+**Why both formats.** They do different jobs and neither substitutes for the
+other. The Markdown summary is what a reader meets on the repository front
+page — it must be legible without downloading anything, and it carries the
+headline figure and the three edge numbers. The LaTeX/PDF is the full argument
+with the method, the corrections and the discussion, and matches the delivery
+pattern of the earlier projects in this series.
+
+The cost is real and named here so it is not discovered later: two documents
+carrying the same claims can drift. The rule is that the Markdown summary
+states no number that is not also in the PDF, and every number in both is
+traceable to a file under `results/`. If a claim changes, both change in the
+same commit.
+
+**Figures the report needs**, all generated from `results/` rather than drawn
+by hand, so that regenerating them is a check rather than a chore:
+
+1. The (ε, w) map on the pool, behavioural metric — the headline.
+2. The normalised curve along w = 0.99 — the hold-then-snap shape, and the
+   figure the name comes from.
+3. Pool and pre-expansion control side by side — the roster effect, from the
+   same sampled matrices.
+4. Influence ranking across the fifteen.
+5. Sensitivity against roster size — mean |Δ map| from 0.203 to 0.045.
+6. A Phase B trajectory, for context on how the apparatus behaves before noise.

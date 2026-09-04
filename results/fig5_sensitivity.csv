@@ -1,0 +1,6 @@
+roster_size,draws,mean_abs_map_delta,ceiling_min,ceiling_median,ceiling_max,ceiling_min_censored,ceiling_median_censored,ceiling_max_censored
+5,24,0.177000,0.06,0.31,0.35,no,no,yes
+7,24,0.125000,0.14,0.26,0.35,no,no,yes
+9,24,0.099000,0.16,0.3,0.35,no,no,yes
+11,24,0.071000,0.16,0.3,0.35,no,no,yes
+13,24,0.037000,0.2,0.3,0.32,no,no,no
