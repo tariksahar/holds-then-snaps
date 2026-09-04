@@ -1,7 +1,11 @@
-# evolutionary-game-sim *(working name)*
+# holds-then-snaps
 
 An agent-based study of the Iterated Prisoner's Dilemma, asking **when
 cooperation survives and when it collapses**.
+
+Named for the answer. Cooperation does not erode as noise rises: it holds at
+0.788 of what the noise allows through an error rate of 28%, and then falls to
+0.628 and 0.162 over the next two grid steps. It holds, and then it snaps.
 
 > **Status: all three phases run.** The report is not written yet. This README
 > will be rewritten around the result once it is.

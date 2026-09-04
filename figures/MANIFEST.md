@@ -12,8 +12,8 @@ Regenerate with `python report_data.py && python figures.py`.
 | `fig1_map_pool.pdf` | `results/fig1_map_pool.csv` | `phase_c_grid.csv` | mean cooperation rate per cell; bistable cells ringed |
 | `fig2_edge_profile.pdf` | `results/fig2_edge_profile.csv` | `phase_c_grid.csv`, w = 0.99 column | normalised 0.788 / 0.628 / 0.162 at ε = 0.28 / 0.30 / 0.32 |
 | `fig3_roster_comparison.pdf` | `results/fig3_roster_comparison.csv` | `phase_c_matrices.npz` | pool and control maps from one sample |
-| `fig4_influence.pdf` | `results/fig4_influence.csv` | `phase_c_matrices.npz` | mean |Δ map| and ε-ceiling cost per strategy |
-| `fig5_sensitivity.pdf` | `results/fig5_sensitivity.csv` | `roster_analysis.log` | mean |Δ map| 0.177 → 0.037 over sizes 5 → 13 |
+| `fig4_influence.pdf` | `results/fig4_influence.csv` | `phase_c_matrices.npz` | mean \|Δ map\| and ε-ceiling cost per strategy |
+| `fig5_sensitivity.pdf` | `results/fig5_sensitivity.csv` | `roster_analysis.log` | mean \|Δ map\| 0.177 → 0.037 over sizes 5 → 13 |
 | `fig6_phase_b_trajectory.pdf` | `results/fig6_phase_b_trajectory.csv` | `tournament.py` + `evolution.py`, control roster | shares by generation; AllD and Random eliminated |
 
 ## Censoring

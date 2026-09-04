@@ -480,9 +480,9 @@ def main() -> None:
         ("3", figure3, "fig3_roster_comparison.csv",
          ("`phase_c_matrices.npz`", "pool and control maps from one sample")),
         ("4", figure4, "fig4_influence.csv",
-         ("`phase_c_matrices.npz`", "mean |Δ map| and ε-ceiling cost per strategy")),
+         ("`phase_c_matrices.npz`", "mean \|Δ map\| and ε-ceiling cost per strategy")),
         ("5", figure5, "fig5_sensitivity.csv",
-         ("`roster_analysis.log`", "mean |Δ map| 0.177 → 0.037 over sizes 5 → 13")),
+         ("`roster_analysis.log`", "mean \|Δ map\| 0.177 → 0.037 over sizes 5 → 13")),
         ("6", figure6, "fig6_phase_b_trajectory.csv",
          ("`tournament.py` + `evolution.py`, control roster", "shares by generation; AllD and Random eliminated")),
     ):
