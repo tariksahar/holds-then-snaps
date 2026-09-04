@@ -1577,3 +1577,93 @@ right-censoring costs: not imprecision, but wrong answers stated confidently.
 extending further to uncensor the `max` column of the sensitivity table — the
 quantity that matters there is the minimum and the median, both of which are
 now measured, and the best-case roster is not a claim the report needs.
+
+---
+
+### D-035 — The censoring produced a wrong conclusion, not an imprecise one, and that is the report's spine
+
+**Date:** 2026-09-04
+**Decided:** How the D-032 reversal is written up, and what the project's
+central claim now is. Verified independently against the extended
+`results/phase_c_grid.csv` (760 rows, ε to 0.35).
+
+**What was verified.** The cliff is real, and the normalised reading
+`(rate − ε)/(1 − 2ε)` is what makes it visible. Along w = 0.99:
+
+| ε | raw rate | normalised |
+|---|---|---|
+| 0.00 | 1.000 | 1.000 |
+| 0.10 | 0.829 | 0.911 |
+| 0.20 | 0.701 | 0.836 |
+| 0.28 | 0.627 | **0.788** |
+| 0.30 | 0.551 | 0.628 |
+| 0.32 | 0.378 | **0.162** |
+| 0.34 | 0.343 | 0.008 |
+
+Cooperation does not erode. It holds — 79% of the achievable band still
+cooperative at an error rate of 28% — and then snaps, losing almost everything
+across two grid steps. The collapse invariant holds throughout the new region
+too: across 239 newly computed pure-defector cells the realised rate equals ε
+to a mean deviation of 0.0033.
+
+Stating the ceiling as a single number is therefore a convention, not a
+measurement. The report should give the three figures around the edge, because
+the shape of the fall is the finding and "0.30" hides it.
+
+**The reversal, and it went against my own reading.** D-032 concluded that
+Contrite TFT was sufficient but not necessary — that the pool without it
+reached the same ceiling. Uncensored, removing Contrite costs 0.30 → 0.22. It
+is load-bearing. Both numbers had been 0.20 only because both were pinned at
+the edge of the grid.
+
+I proposed that reading ("the mechanism matters, the strategy does not"), and
+it was wrong. Censoring did not blur a number here; **it manufactured a
+qualitative claim out of two values that were not measurements at all.** Two
+things pressed against the same ceiling look equal, and there is no way to tell
+from inside the table that they are not.
+
+**The better finding underneath it.** The largest single contributor is not
+Contrite TFT but **Soft Majority**, at 0.10 — the only pool member with
+unbounded memory. It answers an opponent by what they have done *most often
+across the whole history*, so an isolated mistake barely moves the verdict.
+That makes three distinct ways of surviving error, and they are not equally
+good:
+
+- **Contrite TFT** — recognises its own error and accepts the punishment.
+  Structural.
+- **Generous TFT** — forgives a fixed random fraction, without asking whose
+  fault it was. Statistical.
+- **Soft Majority** — judges the whole record rather than the last move, so one
+  slip is diluted rather than answered. Strongest of the three.
+
+Dilution beating both forgiveness and contrition is the more interesting
+result, and it has a plain-language form worth keeping: *judging someone by
+their record rather than their last move is the most robust defence against
+noise there is.*
+
+**Also separated cleanly, and worth its own line:** Always Defect moves the map
+more than anything else and moves the ceiling not at all. The antagonist shapes
+the landscape without setting its limit.
+
+**Why this is now the spine of the report.** The recurring finding has occurred
+four times, and the fourth is different in kind:
+
+1. D-010 — the tournament winner was an artifact of the roster.
+2. D-019 — the final population shares recorded a transient.
+3. D-024/D-028 — a name-based metric reported total victory for cooperation in
+   a population that was 78% defecting.
+4. **D-033/D-034 — the measurement range ended before the phenomenon did, and
+   the resulting conclusion was not merely imprecise but wrong.**
+
+The first three were errors the project caught in its own model. The fourth was
+an error in the project's own analysis, made by both sessions, endorsed in
+writing, and only visible by extending the instrument. That is the honest and
+much stronger version of the thesis: **indicators fail before the thing they
+measure does — including the ones you built yourself, including after you have
+already learned the lesson three times.**
+
+**What remains censored, and stays labelled.** The `max` ceiling column is still
+at the grid edge for roster sizes 5–11 and renders as `≥ 0.35`. Not chased
+further, which is a reasonable stopping point — but `ceiling_is_censored` /
+`format_ceiling` now make the distinction structural rather than a note someone
+has to remember, which is the right fix.

@@ -64,6 +64,7 @@ be described.
 - From here on, **commit at the end of every phase.** `decisions.md` records
   what was decided and why; git records what changed and when. The two are not
   substitutes.
+- **Authorship: Tarık, alone.**
 - Report format: undecided.
 - Configuration is `config.py` (frozen `Config` dataclass + `DEFAULT_CONFIG`),
   not YAML — D-006.
