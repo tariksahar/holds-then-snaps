@@ -63,4 +63,8 @@ report/*.log
 report/*.out
 report/*.synctex.gz
 report/*.toc
-report/report.pdf
+
+# report/report.pdf IS committed. It is the deliverable a reader opens, and
+# not everyone who wants to read the report has a TeX installation. It is
+# still fully reproducible: `python build_report.py` rebuilds it from the
+# committed sources and figures.

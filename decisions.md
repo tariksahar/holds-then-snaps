@@ -172,6 +172,23 @@ complete. A skipped test with a stated reason reports the gap on every run.
 
 ### D-010 — The leaderboard is reported with and without Random
 
+> **Corrected 2026-09-04.** This entry quoted two different runs in a single
+> sentence. The leaderboard values below — 2.713 and 2.612 — are from the
+> default 20-trial tournament. The column difference, originally given as
+> 0.7409, and the 0.1058 gap derived from it, are from a 500-trial run. Each
+> pair is internally consistent on its own: at 500 trials the leaderboard reads
+> 2.7115 against 2.6056, a gap of 0.1058, and 0.7409 / 7 = 0.1058; at 20 trials
+> it reads 2.7130 against 2.6117, a gap of 0.1013, and 0.7090 / 7 = 0.1013.
+> Quoted together they were arithmetic that did not close. The table and the
+> sentence now use the 20-trial figures throughout: **0.7090** and **0.1013**.
+>
+> Nothing about the ordering or the finding moves. Grim Trigger and Tit-for-Tat
+> remain identical against every opponent that is not a coin flip, the entire
+> leaderboard margin remains that one column, and removing Random still
+> collapses the ranking into a tie. Only the magnitude changes — and only
+> because the magnitude was being read off a different run from the one the
+> rest of the sentence described.
+
 **Date:** 2026-09-02
 **Decided:** Random stays in the roster, but every reported ranking is shown
 both with and without it, and the report states plainly that the tournament
@@ -187,13 +204,13 @@ shows where that margin comes from:
 | Always Defect | +0.0000 |
 | Tit-for-Tat | +0.0000 |
 | Grim Trigger | +0.0000 |
-| **Random** | **+0.7409** |
+| **Random** | **+0.7090** |
 | Pavlov | +0.0000 |
 | Tit-for-Two-Tats | +0.0000 |
 
 The two strategies are *identical* against every opponent that is not a coin
-flip. The entire 0.1058 leaderboard gap is one column divided by seven
-(0.7409 / 7 = 0.1058). Grim's advantage is that Random defects early, which
+flip. The entire 0.1013 leaderboard gap is one column divided by seven
+(0.7090 / 7 = 0.1013). Grim's advantage is that Random defects early, which
 trips Grim's trigger and licenses it to harvest 0.5·T + 0.5·P ≈ 3.0 for the
 remaining rounds, while Tit-for-Tat keeps mirroring the coin and averages 2.25.
 
@@ -1048,14 +1065,26 @@ that was 78% defecting. The recurring finding is not about cooperation at all �
 it is that **the indicators fail before the thing they measure does**, and each
 time the failure is only visible by going back to the underlying behaviour.
 
-**Two caveats that stay in the report, unsmoothed.** Seventeen cells are
-bistable rather than noisy: at ε = 0.02, w = 0.8 the five replicates give
-[0.02, 0.93, 0.94, 0.95, 0.98] — four runs land in a cooperative world and one
-in total collapse, differing only in the tournament seed. Reporting a mean there
-would describe an outcome that never occurs. And 21 of 440 runs had not settled
-at G = 60,000, with the latest settling at generation 59,896. They cluster along
-the boundary (ε = 0.02–0.14, w = 0.8–0.99), which is what one expects where two
-attractors compete, but they are flagged provisional rather than presented.
+**Two caveats that stay in the report, unsmoothed.**
+
+> **Corrected 2026-09-04.** Both caveats were computed on the seven-strategy
+> sweep that occupied `results/phase_c_grid.csv` when this entry was written.
+> That path now holds the fifteen-strategy pool; the seven are frozen under
+> `results/control7_*`. The original figures were 17 bistable cells of 88, with
+> ε = 0.02, w = 0.8 giving [0.02, 0.93, 0.94, 0.95, 0.98], and 21 of 440 runs
+> unsettled with the latest at generation 59,896 — all correct for the control
+> roster, and still readable there. Restated below against the file the entry
+> names. The caveats themselves stand: the boundary is bistable and a residue
+> of runs does not settle. Only the roster they are measured on changed.
+
+Twelve of the 152 cells are bistable rather than noisy: at ε = 0.10, w = 0.7 the
+five replicates give [0.10, 0.10, 0.10, 0.45, 0.83] — three runs collapse to
+total defection, one reaches a cooperative world and one sits between them,
+differing only in the tournament seed. Reporting a mean there would describe an
+outcome that never occurs. And 17 of 760 runs had not settled at G = 60,000,
+with the latest settling at generation 58,760. They cluster along the boundary,
+which is what one expects where two attractors compete, but they are flagged
+provisional rather than presented.
 
 ---
 

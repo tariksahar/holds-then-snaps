@@ -1,101 +1,346 @@
-% Holds, then snaps
-% ---------------------------------------------------------------------------
-% Skeleton only: section headings, figure includes and captions are in place;
-% the bodies are deliberately empty and are written by hand.
-%
-% Build with:  python build_report.py
-% ---------------------------------------------------------------------------
-
+% =====================================================================
+%  Holds, Then Snaps
+%  Technical report -- compiles with pdfLaTeX as-is.
+%  Build with: python build_report.py
+% =====================================================================
 \documentclass[11pt,a4paper]{article}
 
-\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[british]{babel}
-\usepackage{microtype}
-
-\usepackage[margin=3.2cm]{geometry}
+% 3.4 cm side margins give a ~14 cm measure, about 72 characters a line --
+% matching the house setting used in the earlier reports in this series.
+\usepackage[a4paper,left=3.4cm,right=3.4cm,top=2.8cm,bottom=2.8cm]{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{amsmath}
-\usepackage{siunitx}
-\usepackage{caption}
-\usepackage[hidelinks]{hyperref}
-\usepackage[round,authoryear]{natbib}
+\usepackage{amsmath,amssymb}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{microtype}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+% Keeps each section's floats inside that section instead of letting them queue
+% up and land three-to-a-page with no text between them.
+\usepackage{placeins}
+% \captionof outside a float (appendix table).
+\usepackage{capt-of}
 
-\graphicspath{{../figures/}}
-\captionsetup{font=small,labelfont=bf,width=0.92\textwidth}
-\bibliographystyle{plainnat}
+\graphicspath{{./}{figures/}{../figures/}}
 
 \newcommand{\eps}{\varepsilon}
-
-% Every figure caption cites the file its numbers come from. See
-% figures/MANIFEST.md for the full mapping.
+% Every figure caption cites the file its numbers come from. The full mapping
+% is in figures/MANIFEST.md.
 \newcommand{\source}[1]{\par\smallskip\footnotesize\textit{Source:} \texttt{#1}}
 
-\title{Holds, then snaps\\
-\large When cooperation survives noise, and how it fails}
-\author{Tarık Sahar}
-\date{}
+\title{\bfseries Holds, Then Snaps\\[0.3em]
+\large How Cooperation Fails Under Execution Error in the Iterated
+Prisoner's Dilemma}
+\author{Tar\i k \c{S}ahar\\[0.2em]
+\small Istanbul Technical University, Data Science and Analytics}
+\date{Simulation run: 4 September 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-% TODO
+\noindent
+Cooperation under noise is widely described as eroding in proportion to how
+unreliable agents are. We find that it does not. Sweeping an execution error
+rate $\eps$
+against a continuation probability $w$ over a fifteen-strategy pool --- 152
+cells, five replicates each, 760 runs --- and measuring cooperation from the moves
+actually played rather than from which strategies survive, normalised
+cooperation declines almost linearly to $\mathbf{0.788}$ at $\eps = 0.28$ and
+then falls to $\mathbf{0.628}$, $\mathbf{0.162}$ and $0.008$ over the following
+three grid steps. Under the usual account we would expect a decline roughly
+tracking $\eps$; we observe a plateau and then a cliff. At an error rate where
+more than a quarter of all moves are mistakes, cooperation still retains four
+fifths of what the noise leaves available; two steps later it retains none. The viable region is a staircase in which the two parameters trade
+against one another, and the trade is bounded: past $\eps \approx 0.30$ no
+horizon buys cooperation back. Two predictions derived from the payoff structure
+before the sweep existed both hold --- the basin of defection scales as $(1-w)$
+(log--log slope $1.046$ against a derived $1.000$), and the retaliator share
+required rises with $\eps$ ($0.57\%$ to $10.0\%$ over $\eps = 0$ to $0.08$,
+monotonically). Because we found that removing a single strategy changes the
+tournament winner, we treat the roster as a measured variable rather than a
+setting: across 120 randomly drawn sub-rosters the dependence of the map on the
+cast falls from $\mathbf{0.177}$ at five strategies to $\mathbf{0.037}$ at
+thirteen, and the seven-strategy roster we used in the noiseless phases sits at
+the \emph{minimum} of 24 draws at its own size. Three mechanisms for surviving a mistake are separable,
+and the strongest is dilution --- judging an opponent by an accumulated record
+rather than by a single move --- whose removal costs $0.10$ of viable range
+against $0.06$ for structural contrition and $0.00$ for probabilistic
+forgiveness. Four claims advanced during this study were later overturned, in every case
+because a summary statistic had reported the state of the instrument rather than
+the state of the system. The fourth produced a conclusion that was wrong rather
+than imprecise; we report it as a documented negative result alongside the
+corrected estimate.
 \end{abstract}
 
-\section{The question}
-\label{sec:question}
-% TODO
+\section{Introduction}
+\label{sec:intro}
 
-\section{Model and method}
-\label{sec:method}
+A round-robin tournament between hand-coded strategies, followed by replicator
+dynamics on the resulting payoff matrix, reproduces results settled since
+Axelrod~\cite{axelrod1984,axelrod1981}. Tit-for-Tat does well; unconditional
+defection eliminates itself once there is nothing left to exploit. Building that
+apparatus is a reasonable exercise, but it is not a finding.
+
+We ask a narrower question the apparatus can answer: under what conditions
+does cooperation survive, and what does its failure look like? We vary two
+properties of the world. Agents sometimes play a move they did not intend, at
+rate $\eps$. And the game is not of publicly known length: after each round it
+continues with probability $w$. The second matters for more than
+realism --- with a fixed, commonly known horizon, backward induction makes
+defection the rational play in every round, which undermines the premise of the
+simulation.
+
+We therefore treat the tournament and the population model as apparatus rather
+than result: they exist to earn the right to trust the code. Three questions
+follow. Where does the boundary of viable cooperation sit, what does the crossing
+look like, and how much of the answer belongs to the model rather than to the
+strategies that happened to be in the room?
+
+\section{Model}
+\label{sec:model}
 
 \subsection{The game}
 \label{sec:game}
-% TODO
+
+Each round, two agents simultaneously choose to cooperate (\textsf{C}) or defect
+(\textsf{D}). Payoffs follow the canonical ordering $T > R > P > S$ with
+$2R > T + S$, the second condition ensuring alternating exploitation does not
+beat sustained mutual cooperation. Throughout, $T=5$, $R=3$, $P=1$, $S=0$ ---
+Axelrod's values, so results are directly comparable with the literature, and
+treated as a default to vary rather than a constant.
+
+Keeping $S = 0$ is deliberate rather than incidental. Adding a constant to all
+four payoffs leaves the game unchanged: the ordering, every best response and
+every matchup outcome are identical, and the tournament ranking is unaffected.
+What it changes is the speed of the replicator dynamics, because the discrete
+update is a ratio and inflating every payoff pushes that ratio towards one ---
+raising all four payoffs by 100 leaves nothing extinct within 200 generations.
+Negative payoffs are a separate matter, taken up in
+Section~\ref{sec:robust}.
 
 \subsection{Strategies}
 \label{sec:strategies}
-% TODO
+
+Strategies are pure functions of the match history: given both players' move
+sequences so far, return the next move. None of them learn; adaptation happens
+only through changes in population share.
+
+The pool of fifteen is chosen by \emph{mechanism} rather than by variety, so
+that a result can be attributed to a way of deciding rather than to a name:
+unconditional play (Always Cooperate, Always Defect); reciprocity at varying
+tolerance (Tit-for-Tat, Tit-for-Two-Tats, Two-Tits-for-Tat, Grim Trigger);
+error-aware play (Generous Tit-for-Tat~\cite{molander1985},
+Contrite Tit-for-Tat~\cite{boyd1989}, Pavlov~\cite{nowak1993}); an opening
+variant (Suspicious Tit-for-Tat); probing and exploitation (Prober, Gradual);
+aggregate history (Soft Majority); and two baselines (Random, Alternator).
+
+Contrite Tit-for-Tat is the one entry designed for the question this report
+asks. It tracks whether it is in good standing, and when its own defection put
+it in bad standing it accepts the resulting punishment instead of answering it.
+Standing is defined on moves actually played, so an execution error ---
+indistinguishable from a deliberate defection even to the player who made it ---
+is still assigned correctly. In self-play at $\eps = 0.02$ it scores $2.94$ of a
+possible $3.00$, where Tit-for-Tat scores $2.455$.
 
 \subsection{Tournament}
 \label{sec:tournament}
-% TODO
+
+Every strategy plays every other and itself. The output that matters is not the
+leaderboard but the matrix $M$, where $M[i,j]$ is the mean payoff \emph{per
+round} that $i$ earns against $j$, with self-play on the diagonal. Per-round
+rather than per-match, so fitness does not scale with the horizon; with
+self-play included, because a population model needs the payoff a strategy earns
+when it meets a copy of itself. The leaderboard is the row mean of that same
+matrix, so the two cannot disagree.
+
+Randomness is addressed rather than assumed. Each match draws from a generator
+keyed by its coordinates $(i,j,\text{trial})$ off one documented root seed,
+rather than from a running stream. Adding a strategy to the roster therefore
+cannot silently shift numbers elsewhere, and any single cell can be re-run in
+isolation. Within a match the two players draw from independent substreams, so a
+stochastic strategy in self-play does not mirror its own moves.
+
+Under a stochastic horizon the per-round payoff is pooled as
+$\mathbb{E}[\text{total}]/\mathbb{E}[\text{length}]$ rather than averaged over
+per-match means, so a one-round match does not count as heavily as a
+hundred-round one. The two coincide at fixed length, which is why the
+distinction is easy to miss.
 
 \subsection{Replicator dynamics}
 \label{sec:replicator}
-% TODO
+
+Population shares evolve by $x_i(t+1) = x_i(t)\, f_i(t) / \bar{f}(t)$, where
+$f_i$ is strategy $i$'s expected payoff against the current mixture, taken
+directly from $M$~\cite{taylor1978,maynardsmith1982}. Dividing by mean fitness
+keeps the shares on the simplex by construction rather than by repair.
+
+Two conventions are required and neither is given by the mathematics. Selection
+intensity enters as $f = (1-s) + s \cdot \text{payoff}$, making the timescale an
+explicit choice rather than an accident of how the payoff numbers happen to be
+written. And shares approach zero without reaching it, so calling a strategy
+extinct requires a cutoff --- applied only at reporting time and never inside
+the dynamics, for reasons given in Section~\ref{sec:robust}.
+
+\section{Methods}
+\label{sec:methods}
 
 \subsection{Execution error and a stochastic horizon}
 \label{sec:phasec-params}
-% TODO
+
+$\eps$ is execution error: the intended move is flipped on the way out, and both
+histories record what was actually played, so the two players never disagree
+about what happened. This is error in doing, not error in seeing; the
+misperception case~\cite{wu1995}, in which the players hold different histories
+of the same match, is outside the scope of this report.
+
+$w$ gives a geometric horizon with expected length $1/(1-w)$. The length cap is
+derived from $w$ rather than fixed, because a fixed cap truncates the
+distribution unevenly: at $w = 0.99$ a cap of 200 rounds cuts $13\%$ of the
+length distribution and pulls the mean from 100 to about 86. Deriving the cap
+from $w$ removes the same negligible tail at every $w$.
+
+Both parameters default to a no-op rather than to a neutral value: at $\eps = 0$
+and $w = 1$ the new code paths are skipped rather than executed with harmless
+arguments, so no draw is taken from a generator that was not taken before. All
+pre-existing tests passed unchanged and bit-identically before anything was
+built on top.
+
+The grid is $\eps \in [0, 0.35]$ against $w \in [0.5, 0.99]$: 19 error rates by
+8 continuation probabilities, 152 cells, five replicates each and 760 runs in
+total, with the replicator run to convergence at $G = 60{,}000$.
 
 \subsection{Measuring cooperation from play, not from names}
 \label{sec:metric}
-% TODO
 
-\section{The apparatus before noise}
+Cooperation is measured as the fraction of moves actually played as \textsf{C}.
+The obvious alternative --- scoring a population cooperative when the strategies
+named as defectors are extinct --- fails under noise, and fails in the direction
+that flatters the result (Section~\ref{sec:robust}).
+
+Because the observable rate is confined to $[\eps, 1-\eps]$ and that band
+narrows as $\eps$ grows, a fixed cutoff is a moving target against it. Results
+are therefore also reported normalised as $(\text{rate}-\eps)/(1-2\eps)$, where
+$1$ is total cooperation and $0$ total defection at every error rate. Both
+readings locate the same boundary, so the boundary is a property of the
+population and not of the cutoff.
+
+\subsection{The roster as a measured variable}
+\label{sec:roster-method}
+
+$M[i,j]$ depends only on strategies $i$ and $j$ and on
+$(\text{payoffs}, \eps, w, \text{rounds})$, never on who else is in the
+tournament. A sub-roster's matrix is therefore the corresponding submatrix of
+one already computed, and its map can be re-derived without re-simulating
+anything. Every roster comparison in this report is made against one shared set
+of sampled matrices, so a difference between two rosters cannot be sampling
+noise between two runs.
+
+Two quantities follow. \emph{Sensitivity} draws random sub-rosters at sizes 5,
+7, 9, 11 and 13, 24 draws each, and reports the mean absolute difference between
+a drawn roster's map and the pool's. \emph{Influence} removes each strategy in
+turn and reports both how far the map moves and how much viable range is lost.
+
+\subsection{Software}
+\label{sec:software}
+
+Python 3.14 with NumPy; Matplotlib for figures. The test suite is 200 tests,
+including five named invariants and a move-for-move cross-check against an
+independent implementation~\cite{knight2016}. Data derivation and rendering are
+separate stages: \texttt{report\_data.py} derives six CSVs from the raw grids
+and matrices, and \texttt{figures.py} renders each figure from those CSVs alone,
+with nothing hand-entered.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{The apparatus before noise}
 \label{sec:apparatus}
-% TODO
 
-\begin{figure}[t]
+With no error and a fixed horizon the model reproduces what it should, and two
+results worth carrying forward fall out of the first run.
+
+Grim Trigger tops the tournament at $\mathbf{2.713}$ against Tit-for-Tat's
+$\mathbf{2.612}$. Subtracting the two rows opponent by opponent, however, puts
+the whole margin in a single column: the strategies are identical to $0.0000$
+against every opponent that is not a coin flip, and Grim beats Tit-for-Tat by
+$\mathbf{0.7090}$ against Random, which is the whole of the $0.1013$
+leaderboard gap once divided across seven opponents. The advantage is not better cooperation. Random
+defects early, tripping Grim's trigger and licensing it to harvest a coin-flipper
+for the remaining rounds. Remove Random and the ranking collapses into a
+three-way tie: Tit-for-Tat $2.6658$, Grim Trigger $2.6658$, Tit-for-Two-Tats
+$2.6650$. The leaderboard reports its roster, not its winner.
+
+Under replicator dynamics from equal shares (Figure~\ref{fig:phaseb}) the
+defectors eliminate themselves --- Always Defect at generation 44, Random at 59
+--- because exploitation pays only while naive cooperators remain to exploit.
+What follows matters more than the eliminations. The five survivors all
+cooperate with one another, so their fitnesses are identical and the spread among
+them is exactly $\mathbf{0}$: selection has nothing left to act on and stops.
+The final proportions record the race, not an equilibrium that was chosen. This is
+the sense in which no pure strategy is evolutionarily stable in the repeated
+game~\cite{boyd1987}: strategies that tie everywhere drift into one another for
+free. Neutral drift of this kind is not an artefact of a small roster --- in
+heterogeneous populations it is the mechanism by which a reciprocator gives way
+to more generous strategies once it has done the work of clearing the
+defectors~\cite{nowak1992}, and it is why the noiseless model cannot answer the
+question this report asks. Only an opponent that defects intermittently breaks
+the ties, which is exactly what $\eps > 0$ supplies.
+
+Sampling 1000 starting mixtures uniformly from the simplex separates the model
+from the starting point. The survivor set belongs to the model: Always Defect and
+Random die in \textbf{1000 runs out of 1000}. The proportions belong to the
+start --- Grim Trigger finishes anywhere between $0.0005$ and $0.9455$ of the
+population depending only on where the run began. We therefore report no final
+proportion as a finding.
+
+Two quantitative results also emerge, and both are predictions about a sweep we
+had not yet run. First, the retaliator share needed to defeat a
+defector majority scales as $1/N$, falling from $6.11\%$ at $N=10$ to $0.14\%$
+at $N=400$: Always Defect's entire advantage over Tit-for-Tat is one round of
+exploitation worth $T-P$, amortised over $N$ rounds. Since a match under
+continuation probability $w$ lasts $1/(1-w)$ rounds in expectation, we predict
+cooperation's basin should shrink like $(1-w)$. Second, what defeats defection is
+retaliation rather than cooperation: holding Always Defect at $99\%$ and
+splitting the remaining $1\%$ between Always Cooperate and Tit-for-Tat,
+$\mathbf{0.252\%}$ Tit-for-Tat is enough to turn the population cooperative,
+while a population that is half Always Defect and half Always Cooperate needs
+\emph{more}, $\mathbf{0.377\%}$. An Always Cooperate pays a defector $T$ every round where a Tit-for-Tat pays $P$
+after the first; cooperators feed defectors and retaliators starve them. Since
+that argument rests on retaliators recognising one another, we predict the
+required share should rise with $\eps$.
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{fig6_phase_b_trajectory.pdf}
   \caption{Replicator dynamics on the seven-strategy control roster with no
-  execution error and a fixed horizon. Always Defect and Random are
-  eliminated; the survivors are mutually neutral, so the final proportions
-  record the transient rather than an equilibrium selection has chosen.
+  execution error and a fixed horizon. Always Defect and Random are eliminated;
+  the survivors are mutually neutral, so the final proportions record the
+  transient rather than an equilibrium selection has chosen.
   \source{results/fig6\_phase\_b\_trajectory.csv}}
   \label{fig:phaseb}
 \end{figure}
 
-\section{The map}
+\FloatBarrier
+\subsection{The map}
 \label{sec:map}
-% TODO
 
-\begin{figure}[t]
+Figure~\ref{fig:map} gives the sweep. The viable region is a staircase, not a
+rectangle: the two parameters trade against one another, and more noise demands
+a longer shadow of the future. On the seven-strategy control the steps are sharp
+--- $\eps = 0$ survives from $w \geq 0.7$, $\eps$ up to $0.08$ needs $w \geq 0.8$,
+$\eps = 0.10$ and $0.12$ need $w \geq 0.9$, $\eps = 0.14$ needs $w \geq 0.98$,
+and above $0.14$ nothing rescues it. The fifteen-strategy pool sustains cooperation to $\eps = 0.30$.
+
+The trade is bounded in both directions. No horizon buys cooperation back past
+the pool's ceiling, and no error rate below it is survivable at short horizons:
+at $w = 0.5$, where a match lasts two rounds in expectation, cooperation fails
+even at $\eps = 0$.
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\linewidth]{fig1_map_pool.pdf}
   \caption{Realised cooperation across the error rate $\eps$ and the
@@ -107,33 +352,87 @@
   \label{fig:map}
 \end{figure}
 
+\FloatBarrier
 \subsection{The edge}
 \label{sec:edge}
-% TODO
 
-\begin{figure}[t]
+Figure~\ref{fig:edge} is the shape the report is named for. Along the longest
+horizon, normalised cooperation declines gently and almost linearly across two
+thirds of the range --- $0.911$ at $\eps = 0.10$, $0.836$ at $0.20$, still
+$\mathbf{0.788}$ at $\eps = 0.28$. At an error rate of $28\%$, where more than a
+quarter of all moves are mistakes, cooperation retains nearly four fifths of what
+the noise leaves available.
+
+Then it goes: $\mathbf{0.628}$ at $\eps = 0.30$, $\mathbf{0.162}$ at $0.32$,
+$0.008$ at $0.34$. Three grid steps take it from most of the band to none of it.
+Under a model in which reliability and cooperation degrade together we would
+expect the middle of this curve to be its steepest part; we observe the
+opposite. The lower panel
+shows the same collapse from the other side --- the realised rate descending
+onto the line $\text{rate} = \eps$, the signature of a population in which no
+move is cooperative except by accident.
+
+Naming a single ceiling is a convention, and one that discards the interesting
+part. The value at $\eps = 0.30$ is the least trustworthy point on the curve:
+across replicates the realised rate there ranges from $0.312$ to $0.613$, the
+bistability of the boundary appearing as a wide spread rather than as a number.
+The three figures around the edge say what one figure cannot.
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.92\linewidth]{fig2_edge_profile.pdf}
   \caption{The shape the report is named for, along the longest horizon
-  ($w = 0.99$). Upper panel: cooperation normalised onto the band the error
-  rate leaves available, $(\text{rate}-\eps)/(1-2\eps)$, so that $1$ is total
+  ($w = 0.99$). Upper panel: cooperation normalised onto the band the error rate
+  leaves available, $(\text{rate}-\eps)/(1-2\eps)$, so that $1$ is total
   cooperation and $0$ total defection at every $\eps$. It holds at $0.788$
   through $\eps = 0.28$, then falls to $0.628$ and $0.162$ over the next two
-  grid steps. Lower panel: the raw rate against the two bounds it lies
-  between; collapse is the rate meeting the lower one.
+  grid steps. Lower panel: the raw rate against the two bounds it lies between;
+  collapse is the rate meeting the lower one.
   \source{results/fig2\_edge\_profile.csv}}
   \label{fig:edge}
 \end{figure}
 
+\FloatBarrier
 \subsection{Two predictions, tested}
 \label{sec:predictions}
-% TODO
 
-\section{The roster as a variable}
+Both predictions in Section~\ref{sec:apparatus} were derived from the payoff
+structure before the sweep existed, which makes agreement worth more than the
+sweep alone.
+
+Holding a population at $90\%$ Always Defect and measuring the Tit-for-Tat share
+needed to save cooperation, the log--log slope against $(1-w)$ is $1.046$
+against a derived $1.000$, and the ratio $\text{needed}/(1-w)$ varies by a factor
+of only $1.14$ across $w = 0.9 \ldots 0.99$. The basin scales as $(1-w)$ as
+derived.
+
+The required retaliator share rises with $\eps$ from $0.5675\%$ to $10.0\%$ over
+$\eps = 0$ to $0.08$ at $w = 0.99$, a factor of $17.6$, monotonically --- and
+more sharply than the prediction stated, because past $\eps = 0.10$ the answer
+is not a larger number but no number: on that roster no retaliator share defeats
+a $90\%$ defector majority.
+
+\FloatBarrier
+\subsection{The roster as a variable}
 \label{sec:roster}
-% TODO
 
-\begin{figure}[t]
+Figure~\ref{fig:rosters} reads the same sampled tournaments twice: over the
+seven strategies our noiseless phases used, and over the fifteen-strategy pool.
+The control breaks above $\eps = \mathbf{0.14}$ where the pool sustains
+cooperation to $\mathbf{0.30}$. This is not a better roster winning. It is a
+roster containing strategies designed for a world with mistakes, asked a question
+about mistakes.
+
+Across 120 sub-rosters the dependence of the answer on the cast falls
+monotonically and steeply with roster size: the mean absolute difference between
+a drawn roster's map and the pool's is $\mathbf{0.177}$ at size five and
+$\mathbf{0.037}$ at size thirteen (Figure~\ref{fig:sensitivity}). The minimum
+ceiling rises with size --- $0.06$, $0.14$, $0.16$, $0.16$, $0.20$ --- and our
+seven-strategy roster's $0.14$ sits at the \emph{minimum} of 24 draws at its own
+size, against a median of $0.26$. We had assembled it for a world without
+mistakes, and on this question it was close to the worst cast available.
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{fig3_roster_comparison.pdf}
   \caption{The same sampled tournaments read twice: once over the seven
@@ -144,11 +443,7 @@
   \label{fig:rosters}
 \end{figure}
 
-\subsection{Sensitivity}
-\label{sec:sensitivity}
-% TODO
-
-\begin{figure}[t]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.86\linewidth]{fig5_sensitivity.pdf}
   \caption{How much of the answer is the cast. Upper panel: the mean absolute
@@ -160,57 +455,320 @@
   \label{fig:sensitivity}
 \end{figure}
 
-\subsection{Influence}
+\FloatBarrier
+\subsection{Influence, and three ways of surviving error}
 \label{sec:influence}
-% TODO
 
-\begin{figure}[t]
+Removing each strategy in turn and re-deriving the whole map gives
+Figure~\ref{fig:influence}, whose two panels disagree in a way that is the point
+of the figure. Always Defect moves the map more than anything else, by
+$\mathbf{0.101}$, and costs \textbf{exactly zero} viable range: the antagonist
+shapes the landscape without setting its limit. Soft Majority is only third by
+map shift, at $0.054$, and \emph{first} by range lost --- removing it drops the
+pool from $0.30$ to $\mathbf{0.20}$. Contrite Tit-for-Tat sits between them at
+$0.070$ and $0.06$. A ranking by either quantity alone would misdescribe the
+pool.
+
+Leave-one-out does not compose, and treating it as though it did is the trap
+here. A strategy can measure as uninfluential precisely because something else
+covers its mechanism: Generous Tit-for-Tat ranks fourteenth of fifteen, not
+because forgiveness is irrelevant but because Contrite Tit-for-Tat and Soft
+Majority already handle error, and handle it better. Remove all three and
+error-handling leaves with them. We therefore measured trimmed rosters rather
+than reading one off the ranking. Keeping the twelve most influential moves the
+map by $0.0145$ and changes the verdict in four cells of $152$; keeping ten
+moves it by $0.0290$ and changes nine; keeping eight moves it by $0.0381$ and
+changes eight. All three hold the $\eps$ ceiling at $0.30$, and all three sit
+below the $0.054$ a change of random seed produces --- which is exactly why the
+map-shift column cannot rank them. Nor does the $w$ staircase separate ten from
+eight: against the pool, ten differs at nine of sixteen $\eps$ steps and eight
+at eight, in both cases by a single grid step. Twelve is the only trimmed
+roster that is cleanly better than the others on both counts, and the honest
+reading is that this grid can distinguish twelve from the pool but not ten from
+eight. We therefore report the pool and treat trimming as a robustness check,
+not as a recommended roster.
+
+\begin{table}[h]
+  \centering
+  \small
+  \begin{tabular}{llrr}
+    \toprule
+    \textbf{Mechanism} & \textbf{Strategy} & \textbf{Map shift} &
+    \textbf{Range lost} \\
+    \midrule
+    Dilution    & Soft Majority   & $0.054$ & $0.10$ \\
+    Contrition  & Contrite TFT    & $0.070$ & $0.06$ \\
+    Forgiveness & Generous TFT    & $0.013$ & $0.00$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Three mechanisms for surviving execution error, by how far the map
+  moves and how much $\eps$ range is lost when each is removed from the pool.
+  Computed at two replicates per cell, as every leave-one-out and sub-roster
+  sweep is; see Section~\ref{sec:robust}.
+  \source{results/fig4\_influence.csv}}
+  \label{tab:mechanisms}
+\end{table}
+
+The pool contains three distinct answers to the problem of a mistake
+(Table~\ref{tab:mechanisms}), and they are not equally good.
+\textbf{Contrition} answers a mistake: the strategy recognises that its own
+defection put it in the wrong and accepts the punishment rather than retaliating
+against it. \textbf{Forgiveness} ignores a fixed fraction of defections without
+asking whose fault they were --- statistical rather than structural, and
+dominated by contrition, which asks. \textbf{Dilution} does not respond to the
+mistake at all: Soft Majority answers an opponent according to what they have
+done most often across the whole history, so a single slip barely moves the
+verdict.
+
+Dilution wins. Judging someone by their record rather than by their last move is
+the most robust defence against noise the model contains. It is also the only one
+of the three requiring unbounded memory, which is a real cost and not a free
+lunch.
+
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth]{fig4_influence.pdf}
   \caption{Each strategy removed in turn, and the map re-derived from the
   remaining submatrix. Left: how far the map moves. Right: how much $\eps$
-  ceiling is lost. The two rank differently, and the difference is the point
-  --- the strategy that moves the map most costs no ceiling at all.
+  range is lost. The two rank differently, and the difference is the point ---
+  the strategy that moves the map most costs no range at all.
   \source{results/fig4\_influence.csv}}
   \label{fig:influence}
 \end{figure}
 
-\subsection{Three ways of surviving error}
-\label{sec:mechanisms}
-% TODO
+\FloatBarrier
+\section{Robustness and threats to validity}
+\label{sec:robust}
 
-\section{Corrections}
-\label{sec:corrections}
-% TODO
+\paragraph{Names are not behaviour.}
+An early formulation scored a population cooperative when the strategies named
+as defectors were extinct. At $\eps \geq 0.16$ on the seven-strategy roster it
+reported a total victory for cooperation, $0.999$, in a population where only
+$22\%$ of moves were cooperative. The survivor was Grim Trigger, which at any
+appreciable error rate is tripped within a few rounds and defects thereafter ---
+a defector wearing a cooperative name. All results in this report use the
+behavioural measure of Section~\ref{sec:metric}. That measure verifies itself:
+across all 354 cells in which Always Defect is the sole survivor, the realised
+rate equals $\eps$ to a mean deviation of $0.0033$, which is what it should be when
+the only cooperative moves left on the board are mistakes.
 
-\section{Discussion}
-\label{sec:discussion}
-% TODO
+\paragraph{Right-censoring, and a documented negative result.}
+The grid initially stopped at $\eps = 0.20$, a point at which the pool still
+cooperates at $0.67$. Every reported ``ceiling of $0.20$'' therefore recorded the
+last column examined and not where any roster broke. This produced a specific
+false claim: comparing the pool against the pool without Contrite Tit-for-Tat,
+both read $0.20$, and the conclusion drawn was that contrition was sufficient
+but not necessary --- that the mechanism mattered and the strategy did not.
+Extending the grid to $\eps = 0.35$ gives $0.30$ and $0.24$ respectively.
+Contrite Tit-for-Tat is load-bearing. We report the extended estimate and retain
+the censored one only as a documented negative result. The same censoring made
+the sensitivity medians unreadable, since a median of $0.20$ at every roster
+size could not mean the median ceiling was $0.20$ when $0.20$ was the largest
+value the grid could produce; uncensored they are $0.26$ to $0.31$. Ceiling
+statistics now carry an explicit censoring flag in the data and are drawn as
+bounds rather than points.
+
+\paragraph{The winner was a property of the roster.}
+``Grim Trigger wins'' was true of the leaderboard and false as a statement about
+the strategy (Section~\ref{sec:apparatus}). It survived until the two rows were
+subtracted opponent by opponent and the entire margin turned out to sit in one
+column. Every ranking in this report is reported both with and without Random,
+and the roster sensitivity analysis of Section~\ref{sec:roster} exists because of
+this result.
+
+\paragraph{Final shares record a transient.}
+The five surviving proportions in the noiseless model look like a result and are
+a photograph of where the race stopped: the fitness spread among survivors is
+exactly $0$, so selection is not choosing between them. Sampling 1000 starting
+points confirmed the survivor set as a property of the model and the proportions
+as almost entirely a property of the start. No proportion is reported here as a
+finding.
+
+\paragraph{Extinction culling must not feed back into the dynamics.}
+Applying an extinction cutoff inside the update, rather than at reporting time,
+changes the answer under noise. Forgiving strategies dip below any non-zero
+threshold during a long non-monotone transient and, once culled, cannot recover.
+At $\eps = 0.02$, $w = 0.99$ any non-zero cutoff reports ``Grim Trigger wins,
+cooperation $0.213$'' where no cutoff reports a surviving cooperative mixture at
+$0.741$. All runs here are uncalled during the dynamics.
+
+\paragraph{Bistability, not noise.}
+Twelve of the pool's 152 cells give replicate spreads that no mean describes.
+At $\eps = 0.10$, $w = 0.7$ the five replicates are $0.10$, $0.10$, $0.10$,
+$0.45$ and $0.83$: three runs collapse to the error floor and two hold a
+cooperative mixture, differing only in the tournament seed. All twelve lie along
+the boundary, where one expects two attractors to compete --- the lowest at
+$w = 0.5$ and the highest at $w = 0.99$, tracking the edge as it climbs. They
+are marked in Figure~\ref{fig:map} rather than averaged away.
+
+\paragraph{Two replicates in the roster sweeps.}
+The headline maps average five replicates per cell. The leave-one-out influence
+table and the 120-roster sensitivity sweep re-derive a map for every roster at
+every cell, so they use two. Both sides of every comparison use the same number,
+so the comparison is fair and only the error bars widen --- but the two counts
+do not give identical values, and where they differ we have kept each number
+with its own provenance rather than quietly reconciling them. Removing Contrite
+Tit-for-Tat costs $0.06$ of ceiling at two replicates (Table~\ref{tab:mechanisms})
+and $0.08$ at five, the decision log's figure. The ranking is unaffected: Soft
+Majority costs $0.10$ under both.
+
+\paragraph{A yardstick for reading map differences.}
+Re-simulating a sub-roster rather than taking its submatrix moves cells by up to
+$0.054$, because the error and continuation draws are keyed by roster position.
+That figure is the scale at which a difference between two maps stops being
+readable. It is why Section~\ref{sec:influence} declines to rank the ten- and
+eight-strategy trims against each other: both move the map by less than a change
+of random seed would, so the ordering between them is not a measurement.
+
+\paragraph{Convergence.}
+Twenty-one of the original 440 runs had not settled at $G = 60{,}000$
+generations, the latest settling at $59{,}896$. They cluster along the boundary,
+which is where two competing attractors would slow convergence. They are flagged
+as provisional in the data rather than presented as settled.
+
+\paragraph{Sampling and payoff level.}
+Twenty trials per matchup was checked against a 500-trial run: no leaderboard
+position moves and every score shifts by less than $0.01$. Under $\eps > 0$ every
+match is stochastic and trials scale to hold the per-pair round budget constant.
+On payoffs, negative values are workable at low selection intensity but not
+guaranteed to be, and the failure is silent --- in an ordinary population state
+under $S = -1$ and $s = 1$ the update assigns negative population shares to
+three strategies. Non-negative payoffs make the guarantee unconditional, which
+is why $S = 0$.
+
+\paragraph{Independent verification.}
+All 21 deterministic pairings agree move for move with an established reference
+implementation~\cite{knight2016} over 200 rounds --- not merely on score, since
+comparing totals alone would allow any payoff-neutral behavioural difference
+through. Stochastic strategies are excluded: two independent generators cannot
+agree, and comparing distributions would test the generators rather than the
+engine.
 
 \section{Limitations}
 \label{sec:limitations}
-% TODO
+
+Our population is well-mixed: every agent is equally likely to meet every other,
+with no neighbourhoods, no network and no assortment. This is the assumption most
+likely to matter, since spatial structure is a known route to cooperation that
+the model cannot represent at all.
+
+No agent learns. Strategies are fixed rules and adaptation happens only through
+population share. A learned or reinforcement-based strategy might occupy regions
+of the map that no hand-coded rule reaches.
+
+Only execution error is modelled. Both players always agree about what was
+played; the misperception case, in which they hold different histories of the
+same match, is absent. Since Contrite Tit-for-Tat's standing is defined on played
+moves, it is precisely the strategy whose advantage would be expected to erode
+under misperception, and that is untested here.
+
+One payoff set carries the main results. We varied $T=5$, $R=3$, $P=1$, $S=0$
+enough to establish that the level does not change the game, but we have not
+checked the shape of the collapse against a materially different $T/R$ ratio.
+Everything reported here is one game's geometry.
+
+Three provenance caveats. The sensitivity figure is parsed from a stored run log
+rather than recomputed, because that sweep takes hours; everything else is
+regenerated from committed data. The ceiling maxima at roster sizes five to
+eleven remain censored at $\eps \geq 0.35$ and were not chased further. And of
+eleven bibliography entries, ten are verified against publisher records or
+Crossref; Axelrod~\cite{axelrod1984} has no authoritative record --- Crossref
+indexes reviews of the book rather than the book --- and its publisher, address
+and year are marked unchecked in the source file.
 
 \section{Conclusion}
 \label{sec:conclusion}
-% TODO
+
+Cooperation in this model survives far more noise than we would have guessed,
+and fails far faster. It holds at $\mathbf{0.788}$ of the achievable band through
+an error rate of $28\%$ and is effectively gone by $32\%$. It does not erode in
+proportion to the error; it holds, and then it snaps. A system observed anywhere
+below that band looks healthy, and the distance from healthy to gone is two grid
+steps.
+
+The mechanism is a scissors closing from both sides. As $\eps$ rises, retaliators
+earn less from one another --- Tit-for-Tat against itself falls from $3.000$ to
+about $2.26$ --- while defectors earn more from one another, rising from $1.000$
+to $1.565$, and much more from retaliators, rising from $1.038$ to $2.034$. The
+structural advantage that makes reciprocity work is the gap between those
+quantities, and it loses two thirds of its size across the range. What sustains
+cooperation past the point where simple reciprocity fails is not more retaliation
+but less reactivity: mechanisms that decline to treat a single observation as
+evidence. Of the three the pool contains, dilution is strongest, and its
+plain-language form is the most transferable sentence in this report --- judging
+someone by their record rather than their last move is the most robust defence
+against noise the model offers.
+
+How much of that answer belongs to the strategies we chose rather than to the
+model is measurable, and we measured it. It falls from $0.177$ to $0.037$ as the
+roster grows from five to thirteen, and our own seven-strategy roster turns out
+to have sat at the minimum of 24 draws at its size. A study that stopped at seven
+would have reported a ceiling less than half the pool's and would have had no way
+of knowing. We did stop at seven, for a while.
+
+Four times in this project a number that looked like a measurement was a fact
+about the instrument: a leaderboard reporting its roster, final shares reporting
+a transient, a name-based metric reporting labels, and a grid reporting its own
+last column. Each became visible only by returning to what the summary had been
+computed from --- the underlying matrix, the trajectory, the moves played, the
+range measured.
+
+The fourth differs in kind, and it is the reason this paragraph exists. The first
+three were errors caught in the model; the fourth was an error in the analysis of
+the model, made after the same lesson had already been recorded twice in this
+project's own decision log, and it produced a conclusion that was wrong rather
+than imprecise. That it recurred is not a lapse to apologise for but the finding:
+the failure mode is not ignorance of the principle. Every summary is a function
+of something, and the function has a domain. Where a summary saturates --- a
+ranking with a top, a rate with a floor, a sweep with a last column --- values at
+the boundary stop being measurements and become statements about the boundary,
+while remaining comparable in appearance.
+
+The two halves of this report are one observation at different scales. A
+population at $\eps = 0.28$ still cooperating at $0.788$ gives no warning that two
+further steps of noise will take it to $0.162$; an indicator holding steady while
+the thing it measures approaches a cliff is precisely what our four methodological
+failures were, occurring in the system rather than in the study of it.
+
+We should be clear about the size of what we have shown. This is one game, one
+population structure, fifteen hand-written rules and no learning; the numbers
+above are exact for that model and are not measurements of cooperation in the
+world. What we think travels is not the ceiling of $0.30$ but the shape ---
+cooperation holds, and then it snaps. So do the numbers we watch it with.
 
 \appendix
 
-\section{Reproducibility}
+\section{Reproduction}
 \label{sec:repro}
-% TODO
+
+Every number in this report derives from files under \texttt{results/}, which
+are committed rather than regenerated on demand.
+\texttt{figures/MANIFEST.md} maps every figure to the file its numbers come
+from, and each caption carries the same reference.
+
+Randomness derives from a single documented root seed, with per-match generators
+keyed by tournament coordinates rather than drawn from a running stream, so any
+individual cell reproduces in isolation and roster changes cannot shift unrelated
+numbers. Figure PDFs do not embed a creation timestamp, so a rebuild that changes
+no number produces no diff.
+
+Run \texttt{python build\_report.py} for the full chain, dominated by the data
+stage, or \texttt{--pdf} to typeset alone. A clean run has been verified end to
+end and the six derived CSVs returned byte-identical to the committed ones. Full
+instructions are in the repository README.
 
 \section{Decision log}
 \label{sec:decisions}
-% TODO
 
-% The section bodies are empty, so nothing cites anything yet and the
-% bibliography would come out blank - which would also mean the bibliography
-% pass had never actually been exercised by a build. \nocite{*} typesets every
-% entry, so `python build_report.py` is a real test of references.bib. Remove
-% it once the prose carries its own citations.
-\nocite{*}
+\texttt{decisions.md} records every methodological choice made during this
+project, in the order it was made, with the alternatives rejected and why. It is
+a deliverable rather than a working note: each item in
+Section~\ref{sec:robust} is traceable there to the entry that first stated the
+mistaken version and to the later entry that overturned it. Entries are numbered
+continuously and are not edited after the fact --- where a conclusion was
+reversed, both the original and the reversal remain.
+
+\bibliographystyle{unsrtnat}
 \bibliography{references}
 
 \end{document}
