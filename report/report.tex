@@ -273,6 +273,7 @@ defects early, tripping Grim's trigger and licensing it to harvest a coin-flippe
 for the remaining rounds. Remove Random and the ranking collapses into a
 three-way tie: Tit-for-Tat $2.6658$, Grim Trigger $2.6658$, Tit-for-Two-Tats
 $2.6650$. The leaderboard reports its roster, not its winner.
+\source{results/phase\_a\_leaderboard.csv}
 
 Under replicator dynamics from equal shares (Figure~\ref{fig:phaseb}) the
 defectors eliminate themselves --- Always Defect at generation 44, Random at 59
@@ -621,10 +622,15 @@ eight-strategy trims against each other: both move the map by less than a change
 of random seed would, so the ordering between them is not a measurement.
 
 \paragraph{Convergence.}
-Twenty-one of the original 440 runs had not settled at $G = 60{,}000$
-generations, the latest settling at $59{,}896$. They cluster along the boundary,
-which is where two competing attractors would slow convergence. They are flagged
-as provisional in the data rather than presented as settled.
+Seventeen of the pool's 760 runs had not settled at $G = 60{,}000$ generations,
+the latest run to settle doing so at $58{,}760$. They cluster along the boundary
+--- $\eps$ between $0.02$ and $0.32$, $w$ between $0.6$ and $0.95$ --- which is
+where two competing attractors would slow convergence, and the cell that
+supplies the bistability example above, $\eps = 0.10$, $w = 0.7$, is among them.
+They are flagged as provisional in the data rather than presented as settled.
+(The seven-strategy control roster gives $21$ of $440$ unsettled with the latest
+at $59{,}896$; those are the figures the decision log records for it, and they
+are not the pool's.)
 
 \paragraph{Sampling and payoff level.}
 Twenty trials per matchup was checked against a 500-trial run: no leaderboard

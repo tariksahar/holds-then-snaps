@@ -37,6 +37,15 @@ historical record; the re-derived map is the controlled comparison.
   generation limit, library versions, platform.
 - `*_run.log`, `*_predictions.log` — the printed reports, kept so the numbers
   quoted in `decisions.md` can be traced to the run that produced them.
+- `phase_a_leaderboard.csv` — the noiseless seven-strategy tournament: the
+  leaderboard with Random, the same leaderboard with Random removed, and the
+  opponent-by-opponent difference between the Grim Trigger and Tit-for-Tat
+  rows. That last column is where the reported 0.7090 comes from: the two
+  strategies are identical against every opponent but Random. Produced by
+  `python report_data.py --phase-a` (seconds), and by a full
+  `python report_data.py` along with everything else.
+  Phase A predates the sweep machinery and was previously only ever printed,
+  so its numbers were the one part of the report not backed by a file.
 
 The prediction tests (D-020 and D-022) appear only under `control7_`. They were
 not re-run on the pool because they do not depend on it: the basin probe puts
