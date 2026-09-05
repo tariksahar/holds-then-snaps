@@ -995,8 +995,25 @@ computed.
 ### D-028 — Past ε ≈ 0.15 cooperation does not lose; it stops meaning anything
 
 **Date:** 2026-09-02
-**Decided:** This is the reading the report leads with. Independently verified
-against `results/phase_c_grid.csv` and `phase_c_matrices.npz`.
+**Decided:** This is the reading the report leads with.
+
+> **Scope note, 2026-09-04.** Every number in this entry is the
+> **seven-strategy control roster**: the staircase ending at ε = 0.14, the 215
+> pure-defector cells, the scissors table, and the survivor sequence that ends
+> in Grim Trigger alone. When the entry was written those were what
+> `results/phase_c_grid.csv` and `phase_c_matrices.npz` contained. Those paths
+> now hold the fifteen-strategy pool, and the control is frozen under
+> `results/control7_*` — so a reader checking this entry against the file it
+> names would match almost nothing. Read it against `control7_grid.csv` and
+> `control7_matrices.npz`.
+>
+> This is the third correction with one cause: a file path was treated as a
+> stable reference when what changed underneath it was the roster. D-010 mixed
+> two trial counts, the caveats below mixed two rosters, and this header cites
+> a file whose contents changed after it was written. The lesson for the report
+> is the one already in it — an identifier is not evidence of what it points
+> at — and the practical fix is that every roster-dependent number now says
+> which roster it came from.
 
 **The boundary is a staircase, not a rectangle.** Summarising it as "w ≥ 0.8 and
 ε ≲ 0.14" understates the structure. The two dials trade against each other:
